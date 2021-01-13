@@ -1,12 +1,16 @@
 package sky.skygod.skylibrary.model;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,6 +25,10 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID uuid;
 
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
     @NotEmpty(message = "Book name cannot be empty")
     private String name;
 
@@ -32,19 +40,19 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @NotNull
+    @NotNull(message = "Book authors cannot be null")
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns =
     @JoinColumn(name = "author_id"))
     private Set<Author> authors;
 
-    @NotNull
+    @NotNull(message = "Book genders cannot be null")
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "gender_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns =
     @JoinColumn(name = "gender_id"))
     private Set<Gender> genders;
 
-    @NotNull
+    @NotNull(message = "Book publishing company cannot be null")
     @ManyToOne
     @JoinColumn(name = "publishing_company_id")
     private PublishingCompany publishingCompany;

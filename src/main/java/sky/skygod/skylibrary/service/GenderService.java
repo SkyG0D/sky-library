@@ -27,17 +27,17 @@ public class GenderService {
     }
 
     public void delete(UUID uuid) {
-        this.genderRepository.delete(findByIdOrThrowException(uuid));
+        this.genderRepository.delete(findByIdOrElseThrowException(uuid));
     }
 
     public void replace(GenderPutRequestBody genderPutRequestBody) {
-        Gender savedGender = findByIdOrThrowException(genderPutRequestBody.getUuid());
+        Gender savedGender = findByIdOrElseThrowException(genderPutRequestBody.getUuid());
         Gender gender = genderRepository.save(GenderMapper.INSTANCE.toGender(genderPutRequestBody));
         gender.setUuid(savedGender.getUuid());
         genderRepository.save(gender);
     }
 
-    private Gender findByIdOrThrowException(UUID uuid) {
+    private Gender findByIdOrElseThrowException(UUID uuid) {
         return genderRepository
                 .findById(uuid)
                 .orElseThrow(() -> new NotFoundException("Gender not found"));
