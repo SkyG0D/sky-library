@@ -8,14 +8,18 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
-public class Book extends BaseEntity {
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID uuid;
 
     @NotEmpty(message = "Book name cannot be empty")
     private String name;

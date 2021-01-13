@@ -1,23 +1,25 @@
 package sky.skygod.skylibrary.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.UUID;
 
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
-public class LibraryUser extends BaseEntity {
+public class LibraryUser {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID uuid;
 
     @NotEmpty(message = "User name cannot be empty")
     private String name;

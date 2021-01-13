@@ -1,3 +1,8 @@
+server:
+  port: 8080
+  error:
+    include-stacktrace: on_param
+
 spring:
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/skylibrary
@@ -9,3 +14,9 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQLDialect
   jackson:
     date-format: yyyy-MM-dd
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG

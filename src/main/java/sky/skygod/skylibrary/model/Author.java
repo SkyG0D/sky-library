@@ -3,19 +3,22 @@ package sky.skygod.skylibrary.model;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
-public class Author extends BaseEntity {
+public class Author {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID uuid;
 
     @NotEmpty(message = "Author name cannot be empty")
     private String name;
