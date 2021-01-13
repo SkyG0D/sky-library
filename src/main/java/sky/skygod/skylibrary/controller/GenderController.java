@@ -10,6 +10,7 @@ import sky.skygod.skylibrary.requests.gender.GenderPostRequestBody;
 import sky.skygod.skylibrary.requests.gender.GenderPutRequestBody;
 import sky.skygod.skylibrary.service.GenderService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class GenderController {
     }
 
     @PostMapping
-    private ResponseEntity<Gender> save(@RequestBody GenderPostRequestBody genderPostRequestBody) {
+    private ResponseEntity<Gender> save(@RequestBody @Valid GenderPostRequestBody genderPostRequestBody) {
         return new ResponseEntity<>(genderService.save(genderPostRequestBody), HttpStatus.CREATED);
     }
 
@@ -37,7 +38,7 @@ public class GenderController {
     }
 
     @PutMapping
-    private ResponseEntity<Void> replace(@RequestBody GenderPutRequestBody genderPutRequestBody) {
+    private ResponseEntity<Void> replace(@RequestBody @Valid GenderPutRequestBody genderPutRequestBody) {
         genderService.replace(genderPutRequestBody);
         return ResponseEntity.noContent().build();
     }
