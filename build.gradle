@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.postgresql:postgresql'
+    implementation 'commons-io:commons-io:2.8.0'
     implementation 'org.projectlombok:lombok-mapstruct-binding:0.1.0'
     implementation 'org.mapstruct:mapstruct:1.4.0.Final'
     compileOnly 'org.projectlombok:lombok'
