@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import sky.skygod.skylibrary.exception.NotFoundException;
 import sky.skygod.skylibrary.mapper.GenderMapper;
 import sky.skygod.skylibrary.model.Gender;
-import sky.skygod.skylibrary.repository.GenderRepository;
+import sky.skygod.skylibrary.repository.gender.GenderRepository;
 import sky.skygod.skylibrary.requests.gender.GenderPostRequestBody;
 import sky.skygod.skylibrary.requests.gender.GenderPutRequestBody;
 

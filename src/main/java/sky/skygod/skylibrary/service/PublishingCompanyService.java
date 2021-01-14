@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import sky.skygod.skylibrary.exception.NotFoundException;
 import sky.skygod.skylibrary.mapper.PublishingCompanyMapper;
 import sky.skygod.skylibrary.model.PublishingCompany;
-import sky.skygod.skylibrary.repository.PublishingCompanyRepository;
+import sky.skygod.skylibrary.repository.publishingcompany.PublishingCompanyRepository;
 import sky.skygod.skylibrary.requests.publishingcompany.PublishingCompanyPostRequestBody;
 import sky.skygod.skylibrary.requests.publishingcompany.PublishingCompanyPutRequestBody;
 

@@ -1,6 +1,7 @@
 package sky.skygod.skylibrary.requests.book;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import sky.skygod.skylibrary.model.Author;
 import sky.skygod.skylibrary.model.Gender;
 import sky.skygod.skylibrary.model.PublishingCompany;
@@ -26,7 +27,7 @@ public class BookPutRequestBody {
     private String name;
 
     @NotNull(message = "Book pages cannot be null")
-    @Size(min = 10, message = "Book must have at least 10 pages")
+    @Range(min = 10, message = "Book must have at least 10 pages")
     private Integer pages;
 
     @NotNull(message = "Book status cannot be null")
@@ -40,5 +41,9 @@ public class BookPutRequestBody {
 
     @NotNull(message = "Book publishing company cannot be null")
     private PublishingCompany publishingCompany;
+
+    private Long isbn;
+    private String cover;
+    private String description;
 
 }

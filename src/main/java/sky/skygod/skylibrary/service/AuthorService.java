@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import sky.skygod.skylibrary.exception.NotFoundException;
 import sky.skygod.skylibrary.mapper.AuthorMapper;
 import sky.skygod.skylibrary.model.Author;
-import sky.skygod.skylibrary.repository.AuthorRepository;
+import sky.skygod.skylibrary.repository.author.AuthorRepository;
 import sky.skygod.skylibrary.requests.author.AuthorPostRequestBody;
 import sky.skygod.skylibrary.requests.author.AuthorPutRequestBody;
 

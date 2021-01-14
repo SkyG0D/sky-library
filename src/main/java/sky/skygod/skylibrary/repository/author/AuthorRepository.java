@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.repository;
+package sky.skygod.skylibrary.repository.author;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import sky.skygod.skylibrary.model.Author;
