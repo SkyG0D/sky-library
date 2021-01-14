@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.requests.gender;
+package sky.skygod.skylibrary.dto.gender;
 
 import lombok.*;
 

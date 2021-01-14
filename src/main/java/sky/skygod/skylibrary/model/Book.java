@@ -41,7 +41,7 @@ public class Book {
     private Status status;
 
     @NotNull(message = "Book authors cannot be null")
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns =
     @JoinColumn(name = "author_id"))
     private Set<Author> authors;

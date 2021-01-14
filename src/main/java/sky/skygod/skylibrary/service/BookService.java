@@ -10,9 +10,9 @@ import sky.skygod.skylibrary.mapper.BookMapper;
 import sky.skygod.skylibrary.model.Book;
 import sky.skygod.skylibrary.repository.book.BookFilter;
 import sky.skygod.skylibrary.repository.book.BookRepository;
-import sky.skygod.skylibrary.requests.book.BookGetResumedResponseBody;
-import sky.skygod.skylibrary.requests.book.BookPostRequestBody;
-import sky.skygod.skylibrary.requests.book.BookPutRequestBody;
+import sky.skygod.skylibrary.dto.book.BookGetResumedResponseBody;
+import sky.skygod.skylibrary.dto.book.BookPostRequestBody;
+import sky.skygod.skylibrary.dto.book.BookPutRequestBody;
 
 import java.util.UUID;
 
@@ -31,12 +31,17 @@ public class BookService {
     }
 
     public Page<Book> search(BookFilter bookFilter, Pageable pageable) {
-        return bookRepository.findAll(
-                where(
-                        withName(bookFilter.getName())).and(where(
-                        withDescription(bookFilter.getDescription())).and(where(
-                        withStatus(bookFilter.getStatus()))
-                )), pageable);
+        return bookRepository.findAll(where(
+                withName(bookFilter.getName())).and(where(
+                withDescription(bookFilter.getDescription()))).and(where(
+                withStatus(bookFilter.getStatus()))).and(where(
+                withAuthorId(bookFilter.getAuthorId()))).and(where(
+                withAuthorName(bookFilter.getAuthorName()))).and(where(
+                withGenderId(bookFilter.getGenderId()))).and(where(
+                withGenderName(bookFilter.getGenderName()))).and(where(
+                withPublishingCompanyId(bookFilter.getPublishingCompanyId()))).and(where(
+                withPublishingCompanyName(bookFilter.getPublishingCompanyName()))
+        ), pageable);
     }
 
     public Book findByIdOrElseThrowNotFoundException(UUID uuid) {

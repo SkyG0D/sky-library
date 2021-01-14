@@ -6,9 +6,9 @@ import sky.skygod.skylibrary.model.Author;
 import sky.skygod.skylibrary.model.Book;
 import sky.skygod.skylibrary.model.Gender;
 import sky.skygod.skylibrary.model.PublishingCompany;
-import sky.skygod.skylibrary.requests.book.BookGetResumedResponseBody;
-import sky.skygod.skylibrary.requests.book.BookPostRequestBody;
-import sky.skygod.skylibrary.requests.book.BookPutRequestBody;
+import sky.skygod.skylibrary.dto.book.BookGetResumedResponseBody;
+import sky.skygod.skylibrary.dto.book.BookPostRequestBody;
+import sky.skygod.skylibrary.dto.book.BookPutRequestBody;
 
 import java.util.Set;
 import java.util.stream.Collectors;

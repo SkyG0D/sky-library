@@ -6,8 +6,8 @@ import sky.skygod.skylibrary.exception.NotFoundException;
 import sky.skygod.skylibrary.mapper.GenderMapper;
 import sky.skygod.skylibrary.model.Gender;
 import sky.skygod.skylibrary.repository.gender.GenderRepository;
-import sky.skygod.skylibrary.requests.gender.GenderPostRequestBody;
-import sky.skygod.skylibrary.requests.gender.GenderPutRequestBody;
+import sky.skygod.skylibrary.dto.gender.GenderPostRequestBody;
+import sky.skygod.skylibrary.dto.gender.GenderPutRequestBody;
 
 import java.util.List;
 import java.util.UUID;

@@ -3,8 +3,8 @@ package sky.skygod.skylibrary.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import sky.skygod.skylibrary.model.Author;
-import sky.skygod.skylibrary.requests.author.AuthorPostRequestBody;
-import sky.skygod.skylibrary.requests.author.AuthorPutRequestBody;
+import sky.skygod.skylibrary.dto.author.AuthorPostRequestBody;
+import sky.skygod.skylibrary.dto.author.AuthorPutRequestBody;
 
 @Mapper(componentModel = "spring")
 public abstract class AuthorMapper {

@@ -3,8 +3,8 @@ package sky.skygod.skylibrary.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import sky.skygod.skylibrary.model.Gender;
-import sky.skygod.skylibrary.requests.gender.GenderPostRequestBody;
-import sky.skygod.skylibrary.requests.gender.GenderPutRequestBody;
+import sky.skygod.skylibrary.dto.gender.GenderPostRequestBody;
+import sky.skygod.skylibrary.dto.gender.GenderPutRequestBody;
 
 @Mapper(componentModel = "spring")
 public abstract class GenderMapper {

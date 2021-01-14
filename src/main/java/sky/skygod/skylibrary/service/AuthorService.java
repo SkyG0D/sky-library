@@ -8,8 +8,8 @@ import sky.skygod.skylibrary.exception.NotFoundException;
 import sky.skygod.skylibrary.mapper.AuthorMapper;
 import sky.skygod.skylibrary.model.Author;
 import sky.skygod.skylibrary.repository.author.AuthorRepository;
-import sky.skygod.skylibrary.requests.author.AuthorPostRequestBody;
-import sky.skygod.skylibrary.requests.author.AuthorPutRequestBody;
+import sky.skygod.skylibrary.dto.author.AuthorPostRequestBody;
+import sky.skygod.skylibrary.dto.author.AuthorPutRequestBody;
 
 import java.util.List;
 import java.util.UUID;

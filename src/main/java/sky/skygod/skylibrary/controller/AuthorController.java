@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sky.skygod.skylibrary.event.ResourceCreatedEvent;
 import sky.skygod.skylibrary.model.Author;
-import sky.skygod.skylibrary.requests.author.AuthorPostRequestBody;
-import sky.skygod.skylibrary.requests.author.AuthorPutRequestBody;
+import sky.skygod.skylibrary.dto.author.AuthorPostRequestBody;
+import sky.skygod.skylibrary.dto.author.AuthorPutRequestBody;
 import sky.skygod.skylibrary.service.AuthorService;
 
 import javax.servlet.http.HttpServletResponse;

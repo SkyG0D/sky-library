@@ -3,8 +3,8 @@ package sky.skygod.skylibrary.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import sky.skygod.skylibrary.model.PublishingCompany;
-import sky.skygod.skylibrary.requests.publishingcompany.PublishingCompanyPostRequestBody;
-import sky.skygod.skylibrary.requests.publishingcompany.PublishingCompanyPutRequestBody;
+import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPostRequestBody;
+import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPutRequestBody;
 
 @Mapper(componentModel = "spring")
 public abstract class PublishingCompanyMapper {

@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.requests.book;
+package sky.skygod.skylibrary.dto.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

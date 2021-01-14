@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.requests.book;
+package sky.skygod.skylibrary.dto.book;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
@@ -9,19 +9,14 @@ import sky.skygod.skylibrary.model.Status;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookPutRequestBody {
-
-    @NotNull(message = "Book uuid cannot be null")
-    private UUID uuid;
+public class BookPostRequestBody {
 
     @NotEmpty(message = "Book name cannot be empty")
     private String name;

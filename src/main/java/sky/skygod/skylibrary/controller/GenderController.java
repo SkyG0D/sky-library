@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sky.skygod.skylibrary.event.ResourceCreatedEvent;
 import sky.skygod.skylibrary.model.Gender;
-import sky.skygod.skylibrary.requests.gender.GenderPostRequestBody;
-import sky.skygod.skylibrary.requests.gender.GenderPutRequestBody;
+import sky.skygod.skylibrary.dto.gender.GenderPostRequestBody;
+import sky.skygod.skylibrary.dto.gender.GenderPutRequestBody;
 import sky.skygod.skylibrary.service.GenderService;
 
 import javax.servlet.http.HttpServletResponse;

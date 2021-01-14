@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.requests.publishingcompany;
+package sky.skygod.skylibrary.dto.publishingcompany;
 
 import lombok.*;
 import sky.skygod.skylibrary.model.Address;
