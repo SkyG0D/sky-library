@@ -1,10 +1,13 @@
 package sky.skygod.skylibrary.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sky.skygod.skylibrary.event.ResourceCreatedEvent;
 import sky.skygod.skylibrary.model.Book;
 import sky.skygod.skylibrary.repository.book.BookFilter;
 import sky.skygod.skylibrary.requests.book.BookGetResumedResponseBody;
@@ -12,6 +15,7 @@ import sky.skygod.skylibrary.requests.book.BookPostRequestBody;
 import sky.skygod.skylibrary.requests.book.BookPutRequestBody;
 import sky.skygod.skylibrary.service.BookService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.UUID;
 
@@ -21,6 +25,7 @@ import java.util.UUID;
 public class BookController {
 
     private final BookService bookService;
+    private final ApplicationEventPublisher publisher;
 
     @GetMapping
     public ResponseEntity<Page<Book>> search(BookFilter bookFilter, Pageable pageable) {
@@ -43,8 +48,12 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestBody bookPostRequestBody) {
-        return ResponseEntity.ok(bookService.save(bookPostRequestBody));
+    public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestBody bookPostRequestBody,
+                                     HttpServletResponse response) {
+
+        Book savedBook = bookService.save(bookPostRequestBody);
+        publisher.publishEvent(new ResourceCreatedEvent(this, response, savedBook.getUuid()));
+        return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{uuid}")

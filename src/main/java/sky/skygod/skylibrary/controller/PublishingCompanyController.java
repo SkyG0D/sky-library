@@ -1,15 +1,19 @@
 package sky.skygod.skylibrary.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sky.skygod.skylibrary.event.ResourceCreatedEvent;
 import sky.skygod.skylibrary.model.PublishingCompany;
 import sky.skygod.skylibrary.requests.publishingcompany.PublishingCompanyPostRequestBody;
 import sky.skygod.skylibrary.requests.publishingcompany.PublishingCompanyPutRequestBody;
 import sky.skygod.skylibrary.service.PublishingCompanyService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +24,7 @@ import java.util.UUID;
 public class PublishingCompanyController {
 
     private final PublishingCompanyService publishingCompanyService;
+    private final ApplicationEventPublisher publisher;
 
     @GetMapping
     public ResponseEntity<Page<PublishingCompany>> list(Pageable pageable) {
@@ -38,9 +43,12 @@ public class PublishingCompanyController {
 
     @PostMapping
     public ResponseEntity<PublishingCompany> save(
-            @RequestBody @Valid PublishingCompanyPostRequestBody publishingCompanyPostRequestBody) {
+            @RequestBody @Valid PublishingCompanyPostRequestBody publishingCompanyPostRequestBody,
+            HttpServletResponse response) {
 
-        return ResponseEntity.ok(publishingCompanyService.save(publishingCompanyPostRequestBody));
+        PublishingCompany savedPublishingCompany = publishingCompanyService.save(publishingCompanyPostRequestBody);
+        publisher.publishEvent(new ResourceCreatedEvent(this, response, savedPublishingCompany.getUuid()));
+        return new ResponseEntity<>(savedPublishingCompany, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{uuid}")
