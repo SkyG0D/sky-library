@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 @Log4j2
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    // TODO: Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' not supported]
+    // TODO: https://stackoverflow.com/questions/56384933/spring-method-not-allowed-returns-error-code-403-forbidden-instead-of-405
+
     @ExceptionHandler(FileStorageException.class)
     public ResponseEntity<FileStorageExceptionDetails> handleFileStorageException(FileStorageException ex) {
         FileStorageExceptionDetails fileStorageExceptionDetails = FileStorageExceptionDetails.builder()

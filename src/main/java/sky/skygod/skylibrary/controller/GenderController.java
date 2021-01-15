@@ -29,7 +29,7 @@ public class GenderController {
         return ResponseEntity.ok(genderService.list());
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     private ResponseEntity<Gender> save(@RequestBody @Valid GenderPostRequestBody genderPostRequestBody,
                                         HttpServletResponse response) {
         Gender savedGender = genderService.save(genderPostRequestBody);
@@ -37,13 +37,13 @@ public class GenderController {
         return new ResponseEntity<>(savedGender, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("/admin/{uuid}")
     private ResponseEntity<Void> delete(@PathVariable UUID uuid) {
         genderService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PutMapping("/admin")
     private ResponseEntity<Void> replace(@RequestBody @Valid GenderPutRequestBody genderPutRequestBody) {
         genderService.replace(genderPutRequestBody);
         return ResponseEntity.noContent().build();

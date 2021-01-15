@@ -47,7 +47,7 @@ public class BookController {
         return ResponseEntity.ok(bookService.findByIsbn(isbn));
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<Book> save(@RequestBody @Valid BookPostRequestBody bookPostRequestBody,
                                      HttpServletResponse response) {
 
@@ -56,13 +56,13 @@ public class BookController {
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("/admin/{uuid}")
     public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
         bookService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PutMapping("/admin")
     public ResponseEntity<Void> replace(@RequestBody @Valid BookPutRequestBody bookPutRequestBody) {
         bookService.replace(bookPutRequestBody);
         return ResponseEntity.noContent().build();

@@ -29,7 +29,7 @@ public class FileStorageController {
         return IOUtils.toByteArray(in);
     }
 
-    @PostMapping("/images")
+    @PostMapping("/admin/images")
     public ResponseEntity<Response> uploadImage(@RequestParam MultipartFile file) {
         String fileName = fileStorageService.storageImage(file);
 

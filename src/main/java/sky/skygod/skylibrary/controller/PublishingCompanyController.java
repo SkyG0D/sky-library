@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sky.skygod.skylibrary.event.ResourceCreatedEvent;
-import sky.skygod.skylibrary.model.PublishingCompany;
 import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPostRequestBody;
 import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPutRequestBody;
+import sky.skygod.skylibrary.event.ResourceCreatedEvent;
+import sky.skygod.skylibrary.model.PublishingCompany;
 import sky.skygod.skylibrary.service.PublishingCompanyService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class PublishingCompanyController {
         return ResponseEntity.ok(publishingCompanyService.findBy(name));
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<PublishingCompany> save(
             @RequestBody @Valid PublishingCompanyPostRequestBody publishingCompanyPostRequestBody,
             HttpServletResponse response) {
@@ -51,13 +51,13 @@ public class PublishingCompanyController {
         return new ResponseEntity<>(savedPublishingCompany, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("/admin/{uuid}")
     public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
         publishingCompanyService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PutMapping("/admin")
     public ResponseEntity<Void> replace(
             @RequestBody @Valid PublishingCompanyPutRequestBody publishingCompanyPutRequestBody) {
 

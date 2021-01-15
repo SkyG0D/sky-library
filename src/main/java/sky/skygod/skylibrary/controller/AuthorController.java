@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sky.skygod.skylibrary.event.ResourceCreatedEvent;
-import sky.skygod.skylibrary.model.Author;
 import sky.skygod.skylibrary.dto.author.AuthorPostRequestBody;
 import sky.skygod.skylibrary.dto.author.AuthorPutRequestBody;
+import sky.skygod.skylibrary.event.ResourceCreatedEvent;
+import sky.skygod.skylibrary.model.Author;
 import sky.skygod.skylibrary.service.AuthorService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.findBy(name));
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<Author> save(@RequestBody @Valid AuthorPostRequestBody authorPostRequestBody,
                                        HttpServletResponse response) {
 
@@ -50,13 +50,13 @@ public class AuthorController {
         return new ResponseEntity<>(savedAuthor, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("/admin/{uuid}")
     public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
         authorService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PutMapping("/admin")
     public ResponseEntity<Void> replace(@RequestBody @Valid AuthorPutRequestBody authorPutRequestBody) {
         authorService.replace(authorPutRequestBody);
         return ResponseEntity.noContent().build();

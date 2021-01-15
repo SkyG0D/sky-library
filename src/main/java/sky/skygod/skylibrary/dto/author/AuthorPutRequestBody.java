@@ -26,8 +26,5 @@ public class AuthorPutRequestBody {
     @NotNull(message = "Author date of birth cannot be null")
     private LocalDate dateOfBirth;
 
-    @NotNull(message = "Author books cannot be null")
-    private Set<Book> books;
-
     private Address address;
 }
