@@ -18,7 +18,6 @@ import java.io.InputStream;
 @RestController
 @RequestMapping("/files")
 @RequiredArgsConstructor
-@Log4j2
 public class FileStorageController {
 
     private final FileStorageService fileStorageService;
@@ -36,9 +35,10 @@ public class FileStorageController {
 
         String fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/images/")
+                .path("/files/images/")
                 .path(fileName)
                 .toUriString();
+
         Response response = Response.builder()
                 .fileName(fileName)
                 .fileDownloadUri(fileDownloadUri)

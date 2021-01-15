@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import sky.skygod.skylibrary.exception.ExceptionDetails;
+import sky.skygod.skylibrary.exception.FileStorageException;
+import sky.skygod.skylibrary.exception.MyFileNotFoundException;
 import sky.skygod.skylibrary.exception.NotFoundException;
-import sky.skygod.skylibrary.exception.NotFoundExceptionDetails;
-import sky.skygod.skylibrary.exception.ValidationExceptionDetails;
+import sky.skygod.skylibrary.exception.details.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -24,8 +24,34 @@ import java.util.stream.Collectors;
 @Log4j2
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<FileStorageExceptionDetails> handleFileStorageException(FileStorageException ex) {
+        FileStorageExceptionDetails fileStorageExceptionDetails = FileStorageExceptionDetails.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .title("File storage exception, check the documentation.")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(fileStorageExceptionDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MyFileNotFoundException.class)
+    public ResponseEntity<MyFileNotFoundExceptionDetails> handleMyFileNotFoundException(MyFileNotFoundException ex) {
+        MyFileNotFoundExceptionDetails myFileNotFoundExceptionDetails = MyFileNotFoundExceptionDetails.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .title("File not found exception, check file name.")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(myFileNotFoundExceptionDetails, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<NotFoundExceptionDetails> handleNotFoundExceptionDetails(NotFoundException ex) {
+    public ResponseEntity<NotFoundExceptionDetails> handleNotFoundException(NotFoundException ex) {
         NotFoundExceptionDetails notFoundExceptionDetails = NotFoundExceptionDetails.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .title("Not found exception, check the documentation.")

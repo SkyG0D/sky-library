@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.exception;
+package sky.skygod.skylibrary.exception.details;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
