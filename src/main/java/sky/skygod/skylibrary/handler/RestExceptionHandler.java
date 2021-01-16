@@ -1,64 +1,107 @@
 package sky.skygod.skylibrary.handler;
 
 import lombok.extern.log4j.Log4j2;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import sky.skygod.skylibrary.exception.FileStorageException;
-import sky.skygod.skylibrary.exception.MyFileNotFoundException;
-import sky.skygod.skylibrary.exception.NotFoundException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import sky.skygod.skylibrary.exception.*;
 import sky.skygod.skylibrary.exception.details.*;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-@RestController
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Log4j2
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler {
 
-    // TODO: Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' not
-    //  supported]
-    // TODO: https://stackoverflow.com/questions/56384933/spring-method-not-allowed-returns-error-code-403-forbidden
-    //  -instead-of-405
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ExceptionDetails handleAllException(Exception ex) {
+        return ExceptionDetails.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .title("An internal error has occurred")
+                .details(Optional.ofNullable(ex.getMessage()).orElse("Internal server error"))
+                .developerMessage(ex.getClass().getName())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
-    @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public FileSizeLimitExceededExceptionDetails handleFileSizeLimitExceededException(
-            IllegalStateException ex) {
+    @ResponseBody
+    public UnauthorizedExceptionDetails handleUnauthorizedException(UnauthorizedException ex) {
+        return UnauthorizedExceptionDetails.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .title("This user does not have sufficient permission")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .timestamp(LocalDateTime.now())
+                .userRoles(ex.getUserRoles())
+                .build();
+    }
 
-        FileSizeLimitExceededExceptionDetails details = FileSizeLimitExceededExceptionDetails
+    @ExceptionHandler(EmailExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public EmailExistsExceptionDetails handleEmailExistsException(EmailExistsException ex) {
+        return EmailExistsExceptionDetails.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .title("This email already exists")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .timestamp(LocalDateTime.now())
+                .email(ex.getEmail())
+                .build();
+    }
+
+    @ExceptionHandler(RoleNotExistsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public RoleNotExistsExceptionDetails handleRoleNotExistsException(RoleNotExistsException ex) {
+        final List<String> EXISTING_ROLES = Arrays.asList("ROLE_USER", "ROLE_ADMIN", "ROLE_OWNER");
+        Set<String> nonExistentRoles = ex.getRoles().stream()
+                .filter(role -> !EXISTING_ROLES.contains(role))
+                .collect(Collectors.toSet());
+
+        return RoleNotExistsExceptionDetails.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .title("Role not found, check the documentation to view all roles.")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .timestamp(LocalDateTime.now())
+                .roles(nonExistentRoles)
+                .build();
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public FileSizeLimitExceededExceptionDetails handleSizeLimitExceededException(
+            MaxUploadSizeExceededException ex) {
+        return FileSizeLimitExceededExceptionDetails
                 .builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .title("File size exceeded, upload a smaller file.")
+                .details(ex.getMostSpecificCause().getMessage())
+                .developerMessage(ex.getClass().getName())
                 .timestamp(LocalDateTime.now())
                 .build();
-
-        try {
-            FileSizeLimitExceededException fileExceeded = (FileSizeLimitExceededException) ex.getCause();
-            details.setDetails(fileExceeded.getMessage());
-            details.setDeveloperMessage(fileExceeded.getClass().getName());
-        } catch (Exception _ex) {
-            details.setDetails(ex.getMessage());
-            details.setDeveloperMessage(ex.getClass().getName());
-        }
-
-        return details;
     }
 
     @ExceptionHandler(FileStorageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
     public FileStorageExceptionDetails handleFileStorageException(FileStorageException ex) {
         return FileStorageExceptionDetails.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -71,6 +114,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MyFileNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
     public MyFileNotFoundExceptionDetails handleMyFileNotFoundException(MyFileNotFoundException ex) {
         return MyFileNotFoundExceptionDetails.builder()
                 .status(HttpStatus.NOT_FOUND.value())
@@ -83,6 +127,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
     public NotFoundExceptionDetails handleNotFoundException(NotFoundException ex) {
         return NotFoundExceptionDetails.builder()
                 .status(HttpStatus.NOT_FOUND.value())
@@ -93,45 +138,4 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatus status,
-                                                                  WebRequest request) {
-
-        Map<String, String> fieldErrors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .collect(Collectors.toMap(FieldError::getField,
-                        field -> Optional.ofNullable(field.getDefaultMessage()).orElse("Field invalid")));
-
-        ValidationExceptionDetails validationExceptionDetails = ValidationExceptionDetails.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .title("Bad request exception, invalid fields.")
-                .details("Check the field(s) errors.")
-                .developerMessage(ex.getClass().getName())
-                .timestamp(LocalDateTime.now())
-                .fieldErrors(fieldErrors)
-                .build();
-
-        return ResponseEntity.badRequest().body(validationExceptionDetails);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
-                                                             HttpStatus status, WebRequest request) {
-
-        Throwable throwable = Optional.ofNullable(ex.getCause())
-                .orElseGet(() -> new Exception("An error has occurred"));
-        String details = Optional.ofNullable(ex.getMessage()).orElse("An error has occurred");
-
-        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
-                .status(status.value())
-                .title(throwable.getMessage())
-                .details(details)
-                .developerMessage(ex.getClass().getName())
-                .timestamp(LocalDateTime.now())
-                .build();
-
-        return new ResponseEntity<>(exceptionDetails, headers, status);
-    }
 }

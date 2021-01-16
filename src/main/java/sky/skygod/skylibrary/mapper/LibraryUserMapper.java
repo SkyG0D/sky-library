@@ -13,7 +13,7 @@ import sky.skygod.skylibrary.dto.user.LibraryUserPutRequestBody;
 import sky.skygod.skylibrary.model.LibraryUser;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -33,11 +33,11 @@ public abstract class LibraryUserMapper {
 
     public abstract LibraryUserGetResponseBody toLibraryUserGetResponseBody(LibraryUser source);
 
-    public List<String> mapAuthoritiesListToStringList(Collection<? extends GrantedAuthority> source) {
-        return source.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+    public Set<String> mapAuthoritiesListToStringList(Collection<? extends GrantedAuthority> source) {
+        return source.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
 
-    String mapAuthoritiesListToString(List<String> source) {
+    String mapAuthoritiesListToString(Set<String> source) {
         return String.join(", ", source);
     }
 

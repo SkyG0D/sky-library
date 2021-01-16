@@ -18,9 +18,8 @@ import sky.skygod.skylibrary.model.LibraryUser;
 import sky.skygod.skylibrary.model.Wrapper;
 import sky.skygod.skylibrary.repository.user.LibraryUserRepository;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -110,11 +109,11 @@ public class LibraryUserDetailsService implements UserDetailsService {
     }
 
     private void verifyIfUserHasPermissionOrElseThrowUnauthorizedException(LibraryUser user, UserDetails userDetails) {
-        List<String> roles = MAPPER.mapAuthoritiesListToStringList(userDetails.getAuthorities());
-        List<String> userRoles = MAPPER.mapAuthoritiesListToStringList(user.getAuthorities());
+        Set<String> roles = MAPPER.mapAuthoritiesListToStringList(userDetails.getAuthorities());
+        Set<String> userRoles = MAPPER.mapAuthoritiesListToStringList(user.getAuthorities());
 
         if (!roles.containsAll(userRoles)) {
-            throw new UnauthorizedException("The user is not allowed to do this action");
+            throw new UnauthorizedException(roles, "The user is not allowed to do this action");
         }
 
     }
@@ -122,7 +121,7 @@ public class LibraryUserDetailsService implements UserDetailsService {
     private void verifyIfEmailNotExistsOrElseThrowEmailExistsException(String email) {
         LibraryUser foundUser = libraryUserRepository.findByEmail(email);
         Optional.ofNullable(foundUser).ifPresent(user -> {
-            throw new EmailExistsException("Existing email: " + user.getEmail());
+            throw new EmailExistsException(user.getEmail(), "Existing email: " + user.getEmail());
         });
     }
 
@@ -135,10 +134,10 @@ public class LibraryUserDetailsService implements UserDetailsService {
         }
     }
 
-    private void verifyIfRolesExistsOrElseThrowRoleNotExistsException(List<String> roles) {
-        List<String> existingRoles = Arrays.asList("ROLE_USER", "ROLE_ADMIN", "ROLE_OWNER");
+    private void verifyIfRolesExistsOrElseThrowRoleNotExistsException(Set<String> roles) {
+        Set<String> existingRoles = Set.of("ROLE_USER", "ROLE_ADMIN", "ROLE_OWNER");
         if (!existingRoles.containsAll(roles)) {
-            throw new RoleNotExistsException("A role not exist: " + roles);
+            throw new RoleNotExistsException(roles, "A role not exist: " + roles);
         }
     }
 

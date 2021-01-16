@@ -6,7 +6,7 @@ import sky.skygod.skylibrary.model.Address;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -30,7 +30,7 @@ public class LibraryUserPutRequestBody {
     private String password;
 
     @NotNull(message = "User authorities cannot be null")
-    private List<String> authorities;
+    private Set<String> authorities;
 
     private Address address;
 

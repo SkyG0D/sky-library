@@ -4,7 +4,7 @@ import lombok.*;
 import sky.skygod.skylibrary.model.Address;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -18,7 +18,7 @@ public class LibraryUserAdminGetResponseBody {
     private LocalDateTime createdAt;
     private String name;
     private String email;
-    private List<String> authorities;
+    private Set<String> authorities;
     private Address address;
 
 }
