@@ -36,7 +36,7 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.findByIdOrElseThrowNotFoundException(uuid));
     }
 
-    @GetMapping("/findBy")
+    @GetMapping("/find-by")
     public ResponseEntity<List<Author>> findBy(@RequestParam String name) {
         return ResponseEntity.ok(authorService.findBy(name));
     }

@@ -40,7 +40,7 @@ public class AuthorService {
     public void replace(AuthorPutRequestBody authorPutRequestBody) {
         Author savedAuthor = findByIdOrElseThrowNotFoundException(authorPutRequestBody.getUuid());
         Author author = AuthorMapper.INSTANCE.toAuthor(authorPutRequestBody);
-        author.setUuid(author.getUuid());
+        author.setUuid(savedAuthor.getUuid());
         authorRepository.save(author);
     }
 

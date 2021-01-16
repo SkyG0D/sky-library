@@ -38,6 +38,7 @@ public class LibraryUser implements UserDetails {
 
     @Email(message = "Enter a valid email")
     @NotEmpty(message = "Email name cannot be empty")
+    @Column(unique = true)
     private String email;
 
     @NotEmpty(message = "User password cannot be empty")

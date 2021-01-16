@@ -8,8 +8,8 @@ spring:
     multipart:
       enabled: true
       file-size-threshold: 2KB
-      max-file-size: 20KB
-      max-request-size: 20MB
+      max-file-size: 2MB
+      max-request-size: 10MB
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/skylibrary
     username: postgres

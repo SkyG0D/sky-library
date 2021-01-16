@@ -38,16 +38,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public FileSizeLimitExceededExceptionDetails handleFileSizeLimitExceededException(
             IllegalStateException ex) {
 
-        FileSizeLimitExceededException fileExceeded = (FileSizeLimitExceededException) ex.getCause();
-
-        return FileSizeLimitExceededExceptionDetails
+        FileSizeLimitExceededExceptionDetails details = FileSizeLimitExceededExceptionDetails
                 .builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .title("File size exceeded, upload a smaller file.")
-                .details(fileExceeded.getMessage())
-                .developerMessage(fileExceeded.getClass().getName())
                 .timestamp(LocalDateTime.now())
                 .build();
+
+        try {
+            FileSizeLimitExceededException fileExceeded = (FileSizeLimitExceededException) ex.getCause();
+            details.setDetails(fileExceeded.getMessage());
+            details.setDeveloperMessage(fileExceeded.getClass().getName());
+        } catch (Exception _ex) {
+            details.setDetails(ex.getMessage());
+            details.setDeveloperMessage(ex.getClass().getName());
+        }
+
+        return details;
     }
 
     @ExceptionHandler(FileStorageException.class)
