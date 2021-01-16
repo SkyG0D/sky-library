@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/publishers")
+@RequestMapping("/api/v1/publishers")
 @RequiredArgsConstructor
 public class PublishingCompanyController {
 

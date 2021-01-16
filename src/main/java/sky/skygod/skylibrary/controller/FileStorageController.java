@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/api/v1/files")
 @RequiredArgsConstructor
 public class FileStorageController {
 

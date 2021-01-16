@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("authors")
+@RequestMapping("/api/v1/authors")
 @RequiredArgsConstructor
 public class AuthorController {
 

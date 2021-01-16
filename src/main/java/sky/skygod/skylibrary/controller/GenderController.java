@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/genders")
+@RequestMapping("/api/v1/genders")
 @RequiredArgsConstructor
 public class GenderController {
 
