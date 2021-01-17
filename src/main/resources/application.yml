@@ -4,6 +4,8 @@ server:
     include-stacktrace: on_param
 
 spring:
+  profiles:
+    active: "oauth-security"
   servlet:
     multipart:
       enabled: true

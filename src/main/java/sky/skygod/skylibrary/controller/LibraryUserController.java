@@ -1,13 +1,12 @@
 package sky.skygod.skylibrary.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import sky.skygod.skylibrary.dto.user.LibraryUserAdminGetResponseBody;
@@ -23,54 +22,56 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@Log4j2
 public class LibraryUserController {
 
     private final LibraryUserDetailsService libraryUserDetailsService;
     private final ApplicationEventPublisher publisher;
 
     @GetMapping
-    public ResponseEntity<?> list(Pageable pageable, @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(libraryUserDetailsService.list(pageable, userDetails).get());
+    public ResponseEntity<?> list(Pageable pageable, Authentication authentication) {
+        return ResponseEntity.ok(libraryUserDetailsService.list(pageable, authentication.getAuthorities()).get());
     }
 
     @GetMapping("/find-by")
     public ResponseEntity<?> findBy(@RequestParam String name, Pageable pageable,
-                                    @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(libraryUserDetailsService.findBy(name, pageable, userDetails).get());
+                                    Authentication authentication) {
+        return ResponseEntity
+                .ok(libraryUserDetailsService.findBy(name, pageable, authentication.getAuthorities()).get());
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<?> findById(@PathVariable UUID uuid, @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity
-                .ok(libraryUserDetailsService.findByIdOrElseThrowNotFoundException(uuid, userDetails).get());
+    public ResponseEntity<?> findById(@PathVariable UUID uuid, Authentication authentication) {
+        return ResponseEntity.ok(libraryUserDetailsService
+                .findByIdOrElseThrowNotFoundException(uuid, authentication.getAuthorities()).get());
     }
 
     @PostMapping("/admin")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<LibraryUserAdminGetResponseBody> save(
             @RequestBody @Valid LibraryUserPostRequestBody libraryUserPostRequestBody,
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             HttpServletResponse response) {
 
         LibraryUserAdminGetResponseBody savedUser = libraryUserDetailsService
-                .save(libraryUserPostRequestBody, userDetails);
+                .save(libraryUserPostRequestBody, authentication.getAuthorities());
         publisher.publishEvent(new ResourceCreatedEvent(this, response, savedUser.getUuid()));
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("/admin/{uuid}")
-    public ResponseEntity<Void> delete(@PathVariable UUID uuid, @AuthenticationPrincipal UserDetails userDetails) {
-        libraryUserDetailsService.delete(uuid, userDetails);
+    public ResponseEntity<Void> delete(@PathVariable UUID uuid, Authentication authentication) {
+        libraryUserDetailsService.delete(uuid, authentication.getAuthorities());
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/admin")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Void> replace(@RequestBody @Valid LibraryUserPutRequestBody libraryUserPutRequestBody,
-                                        @AuthenticationPrincipal UserDetails userDetails) {
+                                        Authentication authentication) {
 
-        libraryUserDetailsService.replace(libraryUserPutRequestBody, userDetails);
+        libraryUserDetailsService.replace(libraryUserPutRequestBody, authentication.getAuthorities());
         return ResponseEntity.noContent().build();
     }
 

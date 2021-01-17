@@ -37,6 +37,19 @@ public class RestExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ExceptionDetails handleAllRuntimeException(RuntimeException ex) {
+        return ExceptionDetails.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .title("An internal error has occurred")
+                .details(Optional.ofNullable(ex.getMessage()).orElse("Internal server error"))
+                .developerMessage(ex.getClass().getName())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

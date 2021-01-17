@@ -17,4 +17,9 @@ public class SecurityProperties {
     private String allowedOrigin = "*";
     private List<String> allowedMethods = Arrays.asList("POST", "DELETE", "PUT", "GET", "OPTIONS");
 
+    private boolean enableHttps;
+    private int accessTokenTime = 60 * 30;
+    private int refreshTokenTime = 60 * 60 * 24;
+    private int refreshTokenMaxAge = 60 * 60 * 24 * 30;
+
 }

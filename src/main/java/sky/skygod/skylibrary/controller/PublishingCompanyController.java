@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPostRequestBody;
 import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPutRequestBody;
@@ -27,6 +28,7 @@ public class PublishingCompanyController {
     private final ApplicationEventPublisher publisher;
 
     @GetMapping
+    @Secured({"ROLE_USER"})
     public ResponseEntity<Page<PublishingCompany>> list(Pageable pageable) {
         return ResponseEntity.ok(publishingCompanyService.list(pageable));
     }
