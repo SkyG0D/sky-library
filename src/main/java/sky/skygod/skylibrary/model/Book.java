@@ -30,6 +30,7 @@ public class Book {
     private LocalDateTime createdAt;
 
     @NotEmpty(message = "Book name cannot be empty")
+    @NotNull(message = "Book name cannot be null")
     private String name;
 
     @NotNull(message = "Book pages cannot be null")
@@ -57,8 +58,8 @@ public class Book {
     @JoinColumn(name = "publishing_company_id")
     private PublishingCompany publishingCompany;
 
-    private Long isbn;
     private String cover;
+    private Long isbn;
     private String description;
 
 }

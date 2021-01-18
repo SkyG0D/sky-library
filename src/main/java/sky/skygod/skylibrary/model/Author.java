@@ -32,6 +32,7 @@ public class Author {
     private LocalDateTime createdAt;
 
     @NotEmpty(message = "Author name cannot be empty")
+    @NotNull(message = "Author name cannot be null")
     private String name;
 
     @NotNull(message = "Author date of birth cannot be null")

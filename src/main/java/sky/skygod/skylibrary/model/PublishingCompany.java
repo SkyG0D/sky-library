@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,6 +29,8 @@ public class PublishingCompany {
     private LocalDateTime createdAt;
 
     @NotEmpty(message = "Publishing company name cannot be empty")
+    @NotNull(message = "Publishing company name cannot be null")
+    @Column(nullable = false)
     private String name;
 
     @Embedded

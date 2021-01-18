@@ -1,5 +1,6 @@
 package sky.skygod.skylibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,17 +36,22 @@ public class LibraryUser implements UserDetails {
     private LocalDateTime createdAt;
 
     @NotEmpty(message = "User name cannot be empty")
+    @NotNull(message = "User name cannot be null")
     private String name;
 
     @Email(message = "Enter a valid email")
     @NotEmpty(message = "Email name cannot be empty")
+    @NotNull(message = "User name cannot be null")
     @Column(unique = true)
     private String email;
 
     @NotEmpty(message = "User password cannot be empty")
+    @NotNull(message = "User password cannot be null")
+    @JsonIgnore
     private String password;
 
     @NotEmpty(message = "User authorities cannot be empty")
+    @NotNull(message = "User authorities cannot be null")
     private String authorities;
 
     @Embedded
@@ -53,9 +60,9 @@ public class LibraryUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays
-                .stream(authorities.split(", "))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            .stream(authorities.split(", "))
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
     @Override

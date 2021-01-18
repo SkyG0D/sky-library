@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,6 +29,7 @@ public class Gender {
     private LocalDateTime createdAt;
 
     @NotEmpty(message = "Gender name cannot be empty")
+    @NotNull(message = "Gender name cannot be null")
     private String name;
 
 }
