@@ -27,7 +27,7 @@ public class GenderService {
     }
 
     public void delete(UUID uuid) {
-        this.genderRepository.delete(findByIdOrElseThrowException(uuid));
+        genderRepository.delete(findByIdOrElseThrowException(uuid));
     }
 
     public void replace(GenderPutRequestBody genderPutRequestBody) {

@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.controller;
+package sky.skygod.skylibrary.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,68 +8,54 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPostRequestBody;
-import sky.skygod.skylibrary.dto.publishingcompany.PublishingCompanyPutRequestBody;
 import sky.skygod.skylibrary.exception.NotFoundException;
 import sky.skygod.skylibrary.model.PublishingCompany;
-import sky.skygod.skylibrary.service.PublishingCompanyService;
+import sky.skygod.skylibrary.repository.publishingcompany.PublishingCompanyRepository;
 import sky.skygod.skylibrary.util.publishingcompany.PublishingCompanyCreator;
 import sky.skygod.skylibrary.util.publishingcompany.PublishingCompanyPostRequestBodyCreator;
 import sky.skygod.skylibrary.util.publishingcompany.PublishingCompanyPutRequestBodyCreator;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-class PublishingCompanyControllerTest {
+class PublishingCompanyServiceTest {
 
     @InjectMocks
-    private PublishingCompanyController publishingCompanyController;
+    private PublishingCompanyService publishingCompanyService;
 
     @Mock
-    private PublishingCompanyService publishingCompanyServiceMock;
-
-    @Mock
-    private ApplicationEventPublisher publisher;
+    private PublishingCompanyRepository publishingCompanyRepositoryMock;
 
     @BeforeEach
     void setup() {
         PageImpl<PublishingCompany> publishingCompanyPage = new PageImpl<>(
             List.of(PublishingCompanyCreator.createValidPublishingCompany()));
 
-        BDDMockito.doNothing()
-            .when(publisher).publishEvent(ArgumentMatchers.any());
-
-        BDDMockito.when(publishingCompanyServiceMock.list(ArgumentMatchers.any()))
+        BDDMockito.when(publishingCompanyRepositoryMock.findAll(ArgumentMatchers.any(PageRequest.class)))
             .thenReturn(publishingCompanyPage);
 
-        BDDMockito
-            .when(publishingCompanyServiceMock.findByIdOrElseThrowNotFoundException(ArgumentMatchers.any(UUID.class)))
-            .thenReturn(PublishingCompanyCreator.createValidPublishingCompany());
+        BDDMockito.when(publishingCompanyRepositoryMock.findById(ArgumentMatchers.any(UUID.class)))
+            .thenReturn(Optional.ofNullable(PublishingCompanyCreator.createValidPublishingCompany()));
 
-        BDDMockito.when(publishingCompanyServiceMock.findBy(ArgumentMatchers.anyString()))
+        BDDMockito.when(publishingCompanyRepositoryMock.findByNameContainingIgnoreCase(ArgumentMatchers.anyString()))
             .thenReturn(List.of(PublishingCompanyCreator.createValidPublishingCompany()));
 
-        BDDMockito.when(publishingCompanyServiceMock.save(ArgumentMatchers.any(PublishingCompanyPostRequestBody.class)))
+        BDDMockito
+            .when(publishingCompanyRepositoryMock.save(ArgumentMatchers.any(PublishingCompany.class)))
             .thenReturn(PublishingCompanyCreator.createValidPublishingCompany());
 
         BDDMockito.doNothing()
-            .when(publishingCompanyServiceMock)
-            .delete(ArgumentMatchers.any(UUID.class));
-
-        BDDMockito.doNothing()
-            .when(publishingCompanyServiceMock)
-            .replace(ArgumentMatchers.any(PublishingCompanyPutRequestBody.class));
+            .when(publishingCompanyRepositoryMock)
+            .delete(ArgumentMatchers.any(PublishingCompany.class));
     }
 
     @Test
@@ -77,7 +63,7 @@ class PublishingCompanyControllerTest {
     void list_ReturnsListOfPublishersInsidePageObject_WhenSuccessful() {
         PublishingCompany validPublishingCompany = PublishingCompanyCreator.createValidPublishingCompany();
 
-        Page<PublishingCompany> publishingCompanyPage = publishingCompanyController.list(null).getBody();
+        Page<PublishingCompany> publishingCompanyPage = publishingCompanyService.list(PageRequest.of(1, 1));
 
         assertThat(publishingCompanyPage)
             .isNotNull()
@@ -89,10 +75,10 @@ class PublishingCompanyControllerTest {
     @Test
     @DisplayName("list returns empty page when there are no publishers")
     void list_ReturnsEmptyPage_WhenThereAreNoPublishers() {
-        BDDMockito.when(publishingCompanyServiceMock.list(ArgumentMatchers.any()))
+        BDDMockito.when(publishingCompanyRepositoryMock.findAll(ArgumentMatchers.any(PageRequest.class)))
             .thenReturn(Page.empty());
 
-        Page<PublishingCompany> publishingCompanyPage = publishingCompanyController.list(null).getBody();
+        Page<PublishingCompany> publishingCompanyPage = publishingCompanyService.list(PageRequest.of(1, 1));
 
         assertThat(publishingCompanyPage)
             .isNotNull()
@@ -100,12 +86,12 @@ class PublishingCompanyControllerTest {
     }
 
     @Test
-    @DisplayName("findById returns a publishing company when successful")
-    void findById_ReturnsPublishingCompany_WhenSuccessful() {
+    @DisplayName("findByIdOrElseThrowNotFoundException returns a publishing company when successful")
+    void findByIdOrElseThrowNotFoundException_ReturnsPublishingCompany_WhenSuccessful() {
         PublishingCompany validPublishingCompany = PublishingCompanyCreator.createValidPublishingCompany();
 
-        PublishingCompany foundPublishingCompany = publishingCompanyController
-            .findById(UUID.fromString("0714e7be-313c-4ca3-9665-20f7256e4871")).getBody();
+        PublishingCompany foundPublishingCompany = publishingCompanyService
+            .findByIdOrElseThrowNotFoundException(UUID.fromString("0714e7be-313c-4ca3-9665-20f7256e4871"));
 
         assertThat(foundPublishingCompany)
             .isNotNull()
@@ -117,7 +103,7 @@ class PublishingCompanyControllerTest {
     void findBy_ReturnsListOfPublishers_WhenSuccessful() {
         PublishingCompany validPublishingCompany = PublishingCompanyCreator.createValidPublishingCompany();
 
-        List<PublishingCompany> publishers = publishingCompanyController.findBy("SkyG0D").getBody();
+        List<PublishingCompany> publishers = publishingCompanyService.findBy("SkyG0D");
 
         assertThat(publishers)
             .isNotEmpty()
@@ -128,10 +114,10 @@ class PublishingCompanyControllerTest {
     @Test
     @DisplayName("findBy returns empty list when publishers not found")
     void findBy_ReturnsEmptyList_WhenPublishersNotFound() {
-        BDDMockito.when(publishingCompanyServiceMock.findBy(ArgumentMatchers.anyString()))
+        BDDMockito.when(publishingCompanyRepositoryMock.findByNameContainingIgnoreCase(ArgumentMatchers.anyString()))
             .thenReturn(Collections.emptyList());
 
-        List<PublishingCompany> publishers = publishingCompanyController.findBy("SkyG0D").getBody();
+        List<PublishingCompany> publishers = publishingCompanyService.findBy("SkyG0D");
 
         assertThat(publishers)
             .isNotNull()
@@ -143,9 +129,8 @@ class PublishingCompanyControllerTest {
     void save_ReturnsPublishingCompany_WhenSuccessful() {
         PublishingCompany validPublishingCompany = PublishingCompanyCreator.createValidPublishingCompany();
 
-        PublishingCompany savedPublishingCompany = publishingCompanyController
-            .save(PublishingCompanyPostRequestBodyCreator
-                .createPublishingCompanyPostRequestBodyToBeSaved(), null).getBody();
+        PublishingCompany savedPublishingCompany = publishingCompanyService
+            .save(PublishingCompanyPostRequestBodyCreator.createPublishingCompanyPostRequestBodyToBeSaved());
 
         assertThat(savedPublishingCompany)
             .isNotNull()
@@ -155,36 +140,28 @@ class PublishingCompanyControllerTest {
     @Test
     @DisplayName("delete removes publishing company when successful")
     void delete_RemovesPublishingCompany_WhenSuccessful() {
-        ResponseEntity<Void> entity = publishingCompanyController
-            .delete(UUID.fromString("0714e7be-313c-4ca3-9665-20f7256e4871"));
-
-        assertThat(entity).isNotNull();
-
-        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThatCode(() -> publishingCompanyService.delete(UUID.fromString(
+            "0714e7be-313c-4ca3-9665-20f7256e4871"))
+        ).doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("replace updates publishing company when successful")
     void replace_UpdatesPublishingCompany_WhenSuccessful() {
-        ResponseEntity<Void> entity = publishingCompanyController.replace(PublishingCompanyPutRequestBodyCreator
-            .createPublishingCompanyPutRequestBodyToBeUpdate());
-
-        assertThat(entity).isNotNull();
-
-        assertThat(entity.getStatusCode())
-            .isNotNull()
-            .isEqualTo(HttpStatus.NO_CONTENT);
+       assertThatCode(() -> publishingCompanyService.replace(PublishingCompanyPutRequestBodyCreator
+           .createPublishingCompanyPutRequestBodyToBeUpdate())
+       ).doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("findById throws NotFoundException when publishing company does not exists")
-    void findById_ThrowsNotFoundException_WhenPublishingDoesNotExists() {
+    @DisplayName("findByIdOrElseThrowNotFoundException throws NotFoundException when publishing company does not exists")
+    void findByIdOrElseThrowNotFoundException_ThrowsNotFoundException_WhenPublishingDoesNotExists() {
         BDDMockito
-            .when(publishingCompanyServiceMock.findByIdOrElseThrowNotFoundException(ArgumentMatchers.any(UUID.class)))
+            .when(publishingCompanyRepositoryMock.findById(ArgumentMatchers.any(UUID.class)))
             .thenThrow(NotFoundException.class);
 
-        assertThatThrownBy(
-            () -> publishingCompanyController.findById(UUID.fromString("0714e7be-313c-4ca3-9665-20f7256e4871"))
+        assertThatThrownBy(() -> publishingCompanyService.findByIdOrElseThrowNotFoundException(
+            UUID.fromString("0714e7be-313c-4ca3-9665-20f7256e4871"))
         ).isInstanceOf(NotFoundException.class);
     }
 

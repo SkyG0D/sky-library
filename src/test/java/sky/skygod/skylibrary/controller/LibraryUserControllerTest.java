@@ -78,8 +78,8 @@ class LibraryUserControllerTest {
     }
 
     @Test
-    @DisplayName("list returns list of library author inside page object when successful")
-    void list_ReturnsListOfLibraryAuthorInsidePageObject_WhenSuccessful() {
+    @DisplayName("list returns list of library user inside page object when successful")
+    void list_ReturnsListOfLibraryUserInsidePageObject_WhenSuccessful() {
         LibraryUserAdminGetResponseBody validLibraryUser = LibraryUserAdminGetResponseBodyCreator
             .createLibraryUserAdminGetResponseBody();
 
@@ -139,8 +139,8 @@ class LibraryUserControllerTest {
     }
 
     @Test
-    @DisplayName("findByIdOrElseThrowNotFoundException returns library user when successful")
-    void findByIdOrElseThrowNotFoundException_ReturnsLibraryUser_WhenSuccessful() {
+    @DisplayName("findById returns library user when successful")
+    void findById_ReturnsLibraryUser_WhenSuccessful() {
         LibraryUserAdminGetResponseBody validLibraryUser = LibraryUserAdminGetResponseBodyCreator
             .createLibraryUserAdminGetResponseBody();
 
@@ -192,8 +192,8 @@ class LibraryUserControllerTest {
     }
 
     @Test
-    @DisplayName("findByIdOrElseThrowNotFoundException throws NotFoundException when library user is not found")
-    void findByIdOrElseThrowNotFoundException_ThrowsNotFoundException_WhenLibraryUserIsNotFound() {
+    @DisplayName("findBy throws NotFoundException when library user is not found")
+    void findById_ThrowsNotFoundException_WhenLibraryUserIsNotFound() {
         BDDMockito
             .when(libraryUserDetailsServiceMock.findByIdOrElseThrowNotFoundException(ArgumentMatchers.any(UUID.class),
                 ArgumentMatchers.isNull()))

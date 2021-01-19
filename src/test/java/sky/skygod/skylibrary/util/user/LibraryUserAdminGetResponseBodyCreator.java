@@ -15,8 +15,9 @@ public class LibraryUserAdminGetResponseBodyCreator {
             .collect(Collectors.toSet());
 
         return LibraryUserAdminGetResponseBody.builder()
-            .uuid(LibraryUserCreator.createValidUpdatedLibraryUser().getUuid())
-            .name(LibraryUserCreator.createValidUpdatedLibraryUser().getName())
+            .uuid(LibraryUserCreator.createValidLibraryUser().getUuid())
+            .name(LibraryUserCreator.createValidLibraryUser().getName())
+            .email(LibraryUserCreator.createValidLibraryUser().getEmail())
             .authorities(authorities)
             .build();
     }

@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.repository.user;
+package sky.skygod.skylibrary.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import sky.skygod.skylibrary.model.LibraryUser;
+import sky.skygod.skylibrary.repository.user.LibraryUserRepository;
 import sky.skygod.skylibrary.util.user.LibraryUserCreator;
 
 import javax.validation.ConstraintViolationException;

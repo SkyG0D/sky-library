@@ -1,4 +1,4 @@
-package sky.skygod.skylibrary.repository.publishingcompany;
+package sky.skygod.skylibrary.repository;
 
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sky.skygod.skylibrary.model.PublishingCompany;
+import sky.skygod.skylibrary.repository.publishingcompany.PublishingCompanyRepository;
 import sky.skygod.skylibrary.util.publishingcompany.PublishingCompanyCreator;
 
 import javax.validation.ConstraintViolationException;

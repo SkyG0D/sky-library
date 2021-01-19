@@ -1,10 +1,11 @@
-package sky.skygod.skylibrary.repository.gender;
+package sky.skygod.skylibrary.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sky.skygod.skylibrary.model.Gender;
+import sky.skygod.skylibrary.repository.gender.GenderRepository;
 import sky.skygod.skylibrary.util.gender.GenderCreator;
 
 import javax.validation.ConstraintViolationException;

@@ -1,10 +1,11 @@
-package sky.skygod.skylibrary.repository.author;
+package sky.skygod.skylibrary.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sky.skygod.skylibrary.model.Author;
+import sky.skygod.skylibrary.repository.author.AuthorRepository;
 import sky.skygod.skylibrary.util.author.AuthorCreator;
 
 import javax.validation.ConstraintViolationException;
