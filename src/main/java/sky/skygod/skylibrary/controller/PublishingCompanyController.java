@@ -28,7 +28,6 @@ public class PublishingCompanyController {
     private final ApplicationEventPublisher publisher;
 
     @GetMapping
-    @Secured({"ROLE_USER"})
     public ResponseEntity<Page<PublishingCompany>> list(Pageable pageable) {
         return ResponseEntity.ok(publishingCompanyService.list(pageable));
     }
@@ -38,7 +37,7 @@ public class PublishingCompanyController {
         return ResponseEntity.ok(publishingCompanyService.findByIdOrElseThrowNotFoundException(uuid));
     }
 
-    @GetMapping("/findBy")
+    @GetMapping("/by")
     public ResponseEntity<List<PublishingCompany>> findBy(@RequestParam String name) {
         return ResponseEntity.ok(publishingCompanyService.findBy(name));
     }

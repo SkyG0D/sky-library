@@ -25,12 +25,12 @@ public class GenderController {
     private final ApplicationEventPublisher publisher;
 
     @GetMapping
-    private ResponseEntity<List<Gender>> list() {
+    public ResponseEntity<List<Gender>> list() {
         return ResponseEntity.ok(genderService.list());
     }
 
     @PostMapping("/admin")
-    private ResponseEntity<Gender> save(@RequestBody @Valid GenderPostRequestBody genderPostRequestBody,
+    public ResponseEntity<Gender> save(@RequestBody @Valid GenderPostRequestBody genderPostRequestBody,
                                         HttpServletResponse response) {
         Gender savedGender = genderService.save(genderPostRequestBody);
         publisher.publishEvent(new ResourceCreatedEvent(this, response, savedGender.getUuid()));
@@ -38,13 +38,13 @@ public class GenderController {
     }
 
     @DeleteMapping("/admin/{uuid}")
-    private ResponseEntity<Void> delete(@PathVariable UUID uuid) {
+    public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
         genderService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/admin")
-    private ResponseEntity<Void> replace(@RequestBody @Valid GenderPutRequestBody genderPutRequestBody) {
+    public ResponseEntity<Void> replace(@RequestBody @Valid GenderPutRequestBody genderPutRequestBody) {
         genderService.replace(genderPutRequestBody);
         return ResponseEntity.noContent().build();
     }

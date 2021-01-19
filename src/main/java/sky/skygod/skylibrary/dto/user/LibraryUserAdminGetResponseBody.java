@@ -1,14 +1,16 @@
 package sky.skygod.skylibrary.dto.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import sky.skygod.skylibrary.model.Address;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

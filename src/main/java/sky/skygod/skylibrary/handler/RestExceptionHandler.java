@@ -1,6 +1,5 @@
 package sky.skygod.skylibrary.handler;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -20,8 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-@Order(Ordered.HIGHEST_PRECEDENCE)
-@Log4j2
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
 public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)

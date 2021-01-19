@@ -1,17 +1,13 @@
 package sky.skygod.skylibrary.dto.book;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import sky.skygod.skylibrary.model.Status;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 public class BookGetResumedResponseBody {

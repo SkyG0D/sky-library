@@ -1,7 +1,9 @@
 package sky.skygod.skylibrary.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,63 +29,66 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class LibraryUserDetailsService implements UserDetailsService {
 
     private final LibraryUserRepository libraryUserRepository;
     private static final LibraryUserMapper MAPPER = LibraryUserMapper.INSTANCE;
 
-    public Wrapper<?> list(Pageable pageable, Collection<? extends GrantedAuthority> authorities) {
-        return new Wrapper<>(libraryUserRepository.findAll(pageable).map(toResponse(authorities)));
+    public Wrapper<Object> list(Pageable pageable, Authentication authentication) {
+        return new Wrapper<>(libraryUserRepository.findAll(pageable).map(toResponse(authentication.getAuthorities())));
     }
 
-    public Wrapper<?> findBy(String name, Pageable pageable, Collection<? extends GrantedAuthority> authorities) {
+    public Wrapper<Object> findBy(String name, Pageable pageable, Authentication authentication) {
         return new Wrapper<>(libraryUserRepository
-                .findByNameIgnoreCaseContaining(name, pageable).map(toResponse(authorities)));
+            .findByNameIgnoreCaseContaining(name, pageable).map(toResponse(authentication.getAuthorities())));
     }
 
-    public Wrapper<?> findByIdOrElseThrowNotFoundException(UUID uuid,
-                                                           Collection<? extends GrantedAuthority> authorities) {
+    public Wrapper<Object> findByIdOrElseThrowNotFoundException(UUID uuid,
+                                                                Authentication authentication) {
         LibraryUser user = libraryUserRepository.findById(uuid)
-                .orElseThrow(() -> new NotFoundException("Library user not found"));
+            .orElseThrow(() -> new NotFoundException("Library user not found"));
 
-        return isAdmin(authorities)
-                ? new Wrapper<>(MAPPER.toLibraryUserAdminGetResponseBody(user))
-                : new Wrapper<>(MAPPER.toLibraryUserGetResponseBody(user));
+        return isAdmin(authentication.getAuthorities())
+            ? new Wrapper<>(MAPPER.toLibraryUserAdminGetResponseBody(user))
+            : new Wrapper<>(MAPPER.toLibraryUserGetResponseBody(user));
     }
 
     public LibraryUserAdminGetResponseBody save(LibraryUserPostRequestBody libraryUserPostRequestBody,
-                                                Collection<? extends GrantedAuthority> authorities) {
+                                                Authentication authentication) {
         LibraryUser user = MAPPER.toLibraryUser(libraryUserPostRequestBody);
 
         verifyIfRolesExistsOrElseThrowRoleNotExistsException(libraryUserPostRequestBody.getAuthorities());
-        verifyIfUserHasPermissionOrElseThrowUnauthorizedException(user, authorities);
+        verifyIfUserHasPermissionOrElseThrowUnauthorizedException(user, authentication.getAuthorities());
         verifyIfEmailNotExistsOrElseThrowEmailExistsException(user.getEmail());
 
         LibraryUser savedUser = libraryUserRepository.save(user);
 
         return MAPPER
-                .toLibraryUserAdminGetResponseBody(savedUser);
+            .toLibraryUserAdminGetResponseBody(savedUser);
     }
 
-    public void delete(UUID uuid, Collection<? extends GrantedAuthority> authorities) {
-        LibraryUser foundUser = MAPPER
-                .toLibraryUser(findByIdToLibraryUserAdminGetResponseBody(uuid, authorities));
+    public void delete(UUID uuid, Authentication authentication) {
+        LibraryUser foundUser = MAPPER.toLibraryUser(
+            (LibraryUserAdminGetResponseBody) findByIdOrElseThrowNotFoundException(uuid, authentication).get()
+        );
 
-        verifyIfUserHasPermissionOrElseThrowUnauthorizedException(foundUser, authorities);
+        verifyIfUserHasPermissionOrElseThrowUnauthorizedException(foundUser, authentication.getAuthorities());
 
         libraryUserRepository.delete(foundUser);
     }
 
     public void replace(LibraryUserPutRequestBody libraryUserPutRequestBody,
-                        Collection<? extends GrantedAuthority> authorities) {
+                        Authentication authentication) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         LibraryUser user = MAPPER.toLibraryUser(libraryUserPutRequestBody);
 
         verifyIfRolesExistsOrElseThrowRoleNotExistsException(libraryUserPutRequestBody.getAuthorities());
         verifyIfUserHasPermissionOrElseThrowUnauthorizedException(user, authorities);
-        verifyIfUpdatedEmailNotExistsOrElseThrowEmailExistsException(libraryUserPutRequestBody, authorities);
+        verifyIfUpdatedEmailNotExistsOrElseThrowEmailExistsException(libraryUserPutRequestBody, authentication);
 
         LibraryUserAdminGetResponseBody savedUser = findByIdToLibraryUserAdminGetResponseBody(
-                libraryUserPutRequestBody.getUuid(), authorities);
+            libraryUserPutRequestBody.getUuid(), authentication);
 
         user.setUuid(savedUser.getUuid());
         libraryUserRepository.save(user);
@@ -92,19 +97,21 @@ public class LibraryUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         return Optional.ofNullable(libraryUserRepository.findByEmail(username))
-                .orElseThrow(
-                        () -> new UsernameNotFoundException("Username not found with email: \"" + username + "\".")
-                );
+            .orElseThrow(
+                () -> new UsernameNotFoundException("Username not found with email: \"" + username + "\".")
+            );
     }
 
-    private LibraryUserAdminGetResponseBody findByIdToLibraryUserAdminGetResponseBody(UUID uuid, Collection<? extends GrantedAuthority> authorities) {
-        return (LibraryUserAdminGetResponseBody) findByIdOrElseThrowNotFoundException(uuid, authorities).get();
+    private LibraryUserAdminGetResponseBody findByIdToLibraryUserAdminGetResponseBody(UUID uuid,
+                                                                                      Authentication authentication) {
+        return (LibraryUserAdminGetResponseBody)
+            findByIdOrElseThrowNotFoundException(uuid, authentication).get();
     }
 
     private Function<LibraryUser, ?> toResponse(Collection<? extends GrantedAuthority> authorities) {
         return isAdmin(authorities)
-                ? MAPPER::toLibraryUserAdminGetResponseBody
-                : MAPPER::toLibraryUserGetResponseBody;
+            ? MAPPER::toLibraryUserAdminGetResponseBody
+            : MAPPER::toLibraryUserGetResponseBody;
     }
 
     private boolean isAdmin(Collection<? extends GrantedAuthority> authorities) {
@@ -130,9 +137,9 @@ public class LibraryUserDetailsService implements UserDetailsService {
     }
 
     private void verifyIfUpdatedEmailNotExistsOrElseThrowEmailExistsException(LibraryUserPutRequestBody libraryUser,
-                                                                              Collection<? extends GrantedAuthority> authorities) {
+                                                                              Authentication authentication) {
         LibraryUserAdminGetResponseBody foundLibraryUser = findByIdToLibraryUserAdminGetResponseBody(
-                libraryUser.getUuid(), authorities);
+            libraryUser.getUuid(), authentication);
         if (!foundLibraryUser.getEmail().equals(libraryUser.getEmail())) {
             verifyIfEmailNotExistsOrElseThrowEmailExistsException(libraryUser.getEmail());
         }

@@ -6,7 +6,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import sky.skygod.skylibrary.dto.user.LibraryUserAdminGetResponseBody;
@@ -29,49 +31,51 @@ public class LibraryUserController {
     private final ApplicationEventPublisher publisher;
 
     @GetMapping
-    public ResponseEntity<?> list(Pageable pageable, Authentication authentication) {
-        return ResponseEntity.ok(libraryUserDetailsService.list(pageable, authentication.getAuthorities()).get());
+    public ResponseEntity<?> list(Pageable pageable) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(libraryUserDetailsService.list(pageable, authentication).get());
     }
 
     @GetMapping("/find-by")
-    public ResponseEntity<?> findBy(@RequestParam String name, Pageable pageable,
-                                    Authentication authentication) {
+    public ResponseEntity<?> findBy(@RequestParam String name, Pageable pageable) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity
-                .ok(libraryUserDetailsService.findBy(name, pageable, authentication.getAuthorities()).get());
+            .ok(libraryUserDetailsService.findBy(name, pageable, authentication).get());
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<?> findById(@PathVariable UUID uuid, Authentication authentication) {
+    public ResponseEntity<?> findById(@PathVariable UUID uuid) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(libraryUserDetailsService
-                .findByIdOrElseThrowNotFoundException(uuid, authentication.getAuthorities()).get());
+            .findByIdOrElseThrowNotFoundException(uuid, authentication).get());
     }
 
     @PostMapping("/admin")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<LibraryUserAdminGetResponseBody> save(
-            @RequestBody @Valid LibraryUserPostRequestBody libraryUserPostRequestBody,
-            Authentication authentication,
-            HttpServletResponse response) {
+        @RequestBody @Valid LibraryUserPostRequestBody libraryUserPostRequestBody,
+        HttpServletResponse response) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         LibraryUserAdminGetResponseBody savedUser = libraryUserDetailsService
-                .save(libraryUserPostRequestBody, authentication.getAuthorities());
+            .save(libraryUserPostRequestBody, authentication);
         publisher.publishEvent(new ResourceCreatedEvent(this, response, savedUser.getUuid()));
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("/admin/{uuid}")
-    public ResponseEntity<Void> delete(@PathVariable UUID uuid, Authentication authentication) {
-        libraryUserDetailsService.delete(uuid, authentication.getAuthorities());
+    public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        libraryUserDetailsService.delete(uuid, authentication);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/admin")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Void> replace(@RequestBody @Valid LibraryUserPutRequestBody libraryUserPutRequestBody,
-                                        Authentication authentication) {
-
-        libraryUserDetailsService.replace(libraryUserPutRequestBody, authentication.getAuthorities());
+    public ResponseEntity<Void> replace(@RequestBody @Valid LibraryUserPutRequestBody libraryUserPutRequestBody) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        libraryUserDetailsService.replace(libraryUserPutRequestBody, authentication);
         return ResponseEntity.noContent().build();
     }
 

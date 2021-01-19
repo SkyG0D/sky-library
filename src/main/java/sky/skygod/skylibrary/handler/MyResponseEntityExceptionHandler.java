@@ -1,11 +1,16 @@
 package sky.skygod.skylibrary.handler;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import sky.skygod.skylibrary.exception.details.ExceptionDetails;
@@ -16,7 +21,29 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@ControllerAdvice
 public class MyResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+        HttpMessageNotReadableException ex,
+        HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        Throwable throwable = Optional.ofNullable(ex.getCause())
+            .orElseGet(() -> new Exception("An error has occurred"));
+        String detailsMessage = Optional.ofNullable(ex.getMessage()).orElse("An error has occurred");
+
+        ExceptionDetails details = ExceptionDetails.builder()
+            .status(status.value())
+            .title(throwable.getMessage())
+            .details(detailsMessage)
+            .developerMessage(ex.getClass().getName())
+            .timestamp(LocalDateTime.now())
+            .build();
+
+        return new ResponseEntity<>(details, headers, status);
+    }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
@@ -24,16 +51,16 @@ public class MyResponseEntityExceptionHandler extends ResponseEntityExceptionHan
                                                                          WebRequest request) {
 
         Throwable throwable = Optional.ofNullable(ex.getCause())
-                .orElseGet(() -> new Exception("An error has occurred"));
+            .orElseGet(() -> new Exception("An error has occurred"));
         String detailsMessage = Optional.ofNullable(ex.getMessage()).orElse("An error has occurred");
 
         ExceptionDetails details = ExceptionDetails.builder()
-                .status(status.value())
-                .title(throwable.getMessage())
-                .details(detailsMessage)
-                .developerMessage(ex.getClass().getName())
-                .timestamp(LocalDateTime.now())
-                .build();
+            .status(status.value())
+            .title(throwable.getMessage())
+            .details(detailsMessage)
+            .developerMessage(ex.getClass().getName())
+            .timestamp(LocalDateTime.now())
+            .build();
 
         return new ResponseEntity<>(details, headers, status);
     }
@@ -44,19 +71,19 @@ public class MyResponseEntityExceptionHandler extends ResponseEntityExceptionHan
                                                                   WebRequest request) {
 
         Map<String, String> fieldErrors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .collect(Collectors.toMap(FieldError::getField,
-                        field -> Optional.ofNullable(field.getDefaultMessage()).orElse("Field invalid")));
+            .getFieldErrors()
+            .stream()
+            .collect(Collectors.toMap(FieldError::getField,
+                field -> Optional.ofNullable(field.getDefaultMessage()).orElse("Field invalid")));
 
         ValidationExceptionDetails details = ValidationExceptionDetails.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .title("Bad request exception, invalid fields.")
-                .details("Check the field(s) errors.")
-                .developerMessage(ex.getClass().getName())
-                .timestamp(LocalDateTime.now())
-                .fieldErrors(fieldErrors)
-                .build();
+            .status(HttpStatus.BAD_REQUEST.value())
+            .title("Bad request exception, invalid fields.")
+            .details("Check the field(s) errors.")
+            .developerMessage(ex.getClass().getName())
+            .timestamp(LocalDateTime.now())
+            .fieldErrors(fieldErrors)
+            .build();
 
         return ResponseEntity.badRequest().body(details);
     }
@@ -66,16 +93,16 @@ public class MyResponseEntityExceptionHandler extends ResponseEntityExceptionHan
                                                              HttpStatus status, WebRequest request) {
 
         Throwable throwable = Optional.ofNullable(ex.getCause())
-                .orElseGet(() -> new Exception("An error has occurred"));
+            .orElseGet(() -> new Exception("An error has occurred"));
         String detailsMessage = Optional.ofNullable(ex.getMessage()).orElse("An error has occurred");
 
         ExceptionDetails details = ExceptionDetails.builder()
-                .status(status.value())
-                .title(throwable.getMessage())
-                .details(detailsMessage)
-                .developerMessage(ex.getClass().getName())
-                .timestamp(LocalDateTime.now())
-                .build();
+            .status(status.value())
+            .title(throwable.getMessage())
+            .details(detailsMessage)
+            .developerMessage(ex.getClass().getName())
+            .timestamp(LocalDateTime.now())
+            .build();
 
         return new ResponseEntity<>(details, headers, status);
     }

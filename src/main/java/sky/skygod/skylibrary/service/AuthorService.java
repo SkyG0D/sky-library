@@ -29,6 +29,10 @@ public class AuthorService {
                 .orElseThrow(() -> new NotFoundException("Author not found"));
     }
 
+    public List<Author> findBy(String name) {
+        return authorRepository.findByNameContainingIgnoreCase(name);
+    }
+
     public Author save(AuthorPostRequestBody authorPostRequestBody) {
         return authorRepository.save(AuthorMapper.INSTANCE.toAuthor(authorPostRequestBody));
     }
@@ -42,10 +46,6 @@ public class AuthorService {
         Author author = AuthorMapper.INSTANCE.toAuthor(authorPutRequestBody);
         author.setUuid(savedAuthor.getUuid());
         authorRepository.save(author);
-    }
-
-    public List<Author> findBy(String name) {
-        return authorRepository.findByNameContainingIgnoreCase(name);
     }
 
 }

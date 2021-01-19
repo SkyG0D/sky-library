@@ -29,6 +29,8 @@ public abstract class LibraryUserMapper {
 
     public abstract LibraryUser toLibraryUser(LibraryUserAdminGetResponseBody source);
 
+    public abstract LibraryUser toLibraryUser(LibraryUserGetResponseBody source);
+
     public abstract LibraryUserAdminGetResponseBody toLibraryUserAdminGetResponseBody(LibraryUser source);
 
     public abstract LibraryUserGetResponseBody toLibraryUserGetResponseBody(LibraryUser source);
