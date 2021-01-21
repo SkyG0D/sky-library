@@ -1,9 +1,10 @@
 package sky.skygod.skylibrary.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Range;
 
@@ -15,14 +16,17 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @EqualsAndHashCode.Include()
     private UUID uuid;
 
     @Column(updatable = false)
@@ -38,11 +42,12 @@ public class Book {
     private Integer pages;
 
     @NotNull(message = "Book status cannot be null")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
+    @JsonEnumDefaultValue
     private Status status;
 
     @NotNull(message = "Book authors cannot be null")
-    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns =
     @JoinColumn(name = "author_id"))
     private Set<Author> authors;

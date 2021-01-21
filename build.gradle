@@ -5,6 +5,8 @@ plugins {
     id 'java'
 }
 
+apply plugin: 'net.ltgt.apt-idea'
+
 group = 'sky.skygod'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
@@ -13,13 +15,14 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+
+    integrationImplementation.extendsFrom testImplementation
+    integrationRuntime.extendsFrom testRuntime
 }
 
 repositories {
     mavenCentral()
 }
-
-apply plugin: 'net.ltgt.apt-idea'
 
 dependencies {
     implementation 'org.springframework.security:spring-security-jwt:1.0.9.RELEASE'
@@ -43,6 +46,23 @@ dependencies {
     }
 }
 
+sourceSets {
+    integration {
+        java.srcDir "$projectDir/src/integration/java"
+        resources.srcDir "$projectDir/src/integration/resources"
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
 test {
     useJUnitPlatform()
 }
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
+    useJUnitPlatform()
+}
+
+check.dependsOn integrationTest

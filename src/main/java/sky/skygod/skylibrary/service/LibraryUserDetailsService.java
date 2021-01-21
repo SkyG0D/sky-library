@@ -32,6 +32,8 @@ import java.util.function.Function;
 @Log4j2
 public class LibraryUserDetailsService implements UserDetailsService {
 
+    // TODO: Refatorar para ter ROLE_USER como padrão.
+
     private final LibraryUserRepository libraryUserRepository;
     private static final LibraryUserMapper MAPPER = LibraryUserMapper.INSTANCE;
 

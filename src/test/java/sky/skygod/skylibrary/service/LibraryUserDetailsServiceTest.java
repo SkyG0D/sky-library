@@ -54,7 +54,7 @@ class LibraryUserDetailsServiceTest {
         ).thenReturn(libraryUserPage);
 
         BDDMockito.when(libraryUserRepositoryMock.findByEmail(ArgumentMatchers.anyString()))
-            .thenReturn(LibraryUserCreator.createValidLibraryUser());
+            .thenReturn(null);
 
         BDDMockito
             .when(libraryUserRepositoryMock.findById(ArgumentMatchers.any(UUID.class)))

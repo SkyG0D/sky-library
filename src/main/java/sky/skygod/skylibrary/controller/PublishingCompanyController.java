@@ -37,7 +37,7 @@ public class PublishingCompanyController {
         return ResponseEntity.ok(publishingCompanyService.findByIdOrElseThrowNotFoundException(uuid));
     }
 
-    @GetMapping("/by")
+    @GetMapping("/find-by")
     public ResponseEntity<List<PublishingCompany>> findBy(@RequestParam String name) {
         return ResponseEntity.ok(publishingCompanyService.findBy(name));
     }

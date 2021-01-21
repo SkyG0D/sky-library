@@ -9,12 +9,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublishingCompanyPutRequestBody {
 
     @NotNull(message = "Publishing company uuid cannot be null")
+    @EqualsAndHashCode.Include()
     private UUID uuid;
 
     @NotEmpty(message = "Publishing company name cannot be empty")

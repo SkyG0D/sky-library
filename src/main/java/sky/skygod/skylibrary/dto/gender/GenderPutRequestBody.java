@@ -8,12 +8,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenderPutRequestBody {
 
     @NotNull(message = "Gender uuid cannot be empty")
+    @EqualsAndHashCode.Include()
     private UUID uuid;
 
     @NotEmpty(message = "Gender name cannot be empty")

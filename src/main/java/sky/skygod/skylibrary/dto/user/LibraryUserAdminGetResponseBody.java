@@ -1,9 +1,6 @@
 package sky.skygod.skylibrary.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sky.skygod.skylibrary.model.Address;
 
 import java.time.LocalDateTime;
@@ -11,12 +8,15 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LibraryUserAdminGetResponseBody {
 
+    @EqualsAndHashCode.Include()
     private UUID uuid;
+
     private LocalDateTime createdAt;
     private String name;
     private String email;

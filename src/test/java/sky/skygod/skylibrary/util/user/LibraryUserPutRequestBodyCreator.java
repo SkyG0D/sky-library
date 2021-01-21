@@ -19,6 +19,7 @@ public class LibraryUserPutRequestBodyCreator {
             .uuid(LibraryUserCreator.createValidUpdatedLibraryUser().getUuid())
             .name(LibraryUserCreator.createValidUpdatedLibraryUser().getName())
             .password(LibraryUserCreator.createValidUpdatedLibraryUser().getPassword())
+            .email(LibraryUserCreator.createValidUpdatedLibraryUser().getEmail())
             .authorities(authorities)
             .build();
     }

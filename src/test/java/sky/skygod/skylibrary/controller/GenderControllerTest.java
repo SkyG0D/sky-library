@@ -117,9 +117,7 @@ class GenderControllerTest {
 
         assertThat(entity).isNotNull();
 
-        assertThat(entity.getStatusCode())
-            .isNotNull()
-            .isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
 }

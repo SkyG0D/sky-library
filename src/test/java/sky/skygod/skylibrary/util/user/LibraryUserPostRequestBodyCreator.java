@@ -19,6 +19,7 @@ public class LibraryUserPostRequestBodyCreator {
             .name(LibraryUserCreator.createValidLibraryUser().getName())
             .password(LibraryUserCreator.createValidLibraryUser().getPassword())
             .authorities(authorities)
+            .email(LibraryUserCreator.createValidLibraryUser().getEmail())
             .build();
     }
 

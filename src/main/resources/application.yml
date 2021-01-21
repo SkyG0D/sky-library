@@ -5,7 +5,7 @@ server:
 
 spring:
   profiles:
-    active: "basic-security"
+    active: "oauth-security"
   servlet:
     multipart:
       enabled: true

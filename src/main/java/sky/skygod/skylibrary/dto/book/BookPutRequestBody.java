@@ -14,12 +14,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookPutRequestBody {
 
     @NotNull(message = "Book uuid cannot be null")
+    @EqualsAndHashCode.Include()
     private UUID uuid;
 
     @NotEmpty(message = "Book name cannot be empty")

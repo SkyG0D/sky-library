@@ -29,9 +29,6 @@ class BookRepositoryTest {
 
         Book savedBook = bookRepository.save(book);
 
-        System.out.println(book);
-        System.out.println(savedBook);
-
         assertThat(savedBook).isNotNull();
 
         assertThat(savedBook.getUuid()).isNotNull();
@@ -84,6 +81,8 @@ class BookRepositoryTest {
 
         assertThat(optionalBook).isEmpty();
     }
+
+    // TODO: adicionar o findByIsbn
 
     @Test
     @DisplayName("findById returns book when successful")

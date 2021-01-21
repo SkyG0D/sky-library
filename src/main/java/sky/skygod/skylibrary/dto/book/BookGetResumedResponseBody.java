@@ -8,11 +8,15 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class BookGetResumedResponseBody {
 
+    @EqualsAndHashCode.Include()
     private UUID uuid;
+
     private LocalDateTime createdAt;
     private String name;
     private Integer pages;

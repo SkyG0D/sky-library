@@ -79,9 +79,8 @@ class AuthorControllerTest {
 
         Page<Author> authorPage = authorController.list(null).getBody();
 
-        assertThat(authorPage).isNotNull();
-
-        assertThat(authorPage.toList())
+        assertThat(authorPage)
+            .isNotNull()
             .isNotEmpty()
             .hasSize(1)
             .contains(validAuthor);
@@ -171,9 +170,7 @@ class AuthorControllerTest {
 
         assertThat(entity).isNotNull();
 
-        assertThat(entity.getStatusCode())
-            .isNotNull()
-            .isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test

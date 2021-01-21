@@ -110,7 +110,7 @@ class LibraryUserControllerTest {
 
     @Test
     @DisplayName("findBy returns list of library users inside page object when successful")
-    void findBy_ReturnsListOfLibraryAuthorsInsidePageObject_WhenSuccessful() {
+    void findBy_ReturnsListOfLibraryUsersInsidePageObject_WhenSuccessful() {
         LibraryUserAdminGetResponseBody validLibraryUser = LibraryUserAdminGetResponseBodyCreator
             .createLibraryUserAdminGetResponseBody();
 
@@ -186,13 +186,11 @@ class LibraryUserControllerTest {
 
         assertThat(entity).isNotNull();
 
-        assertThat(entity.getStatusCode())
-            .isNotNull()
-            .isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
-    @DisplayName("findBy throws NotFoundException when library user is not found")
+    @DisplayName("findById throws NotFoundException when library user is not found")
     void findById_ThrowsNotFoundException_WhenLibraryUserIsNotFound() {
         BDDMockito
             .when(libraryUserDetailsServiceMock.findByIdOrElseThrowNotFoundException(ArgumentMatchers.any(UUID.class),

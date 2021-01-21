@@ -11,12 +11,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LibraryUserPutRequestBody {
 
     @NotNull(message = "User uuid cannot be empty")
+    @EqualsAndHashCode.Include()
     private UUID uuid;
 
     @NotEmpty(message = "User name cannot be empty")

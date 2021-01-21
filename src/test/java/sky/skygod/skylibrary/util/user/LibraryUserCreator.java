@@ -11,7 +11,7 @@ public class LibraryUserCreator {
             .name("Silvano Pimentel")
             .email("silvanin@hotmail.com")
             .password("{bcrypt}$2a$10$gP0E5f/RqncgOPn4o59KZuNQfm1LwOuRLp8u3ojTAaM6B8kFklRdC")
-            .authorities("ROLE_USER, ROLE_ADMIN, ROLE_USER")
+            .authorities("ROLE_USER, ROLE_ADMIN")
             .build();
     }
 
