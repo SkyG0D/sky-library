@@ -1,5 +1,7 @@
 package sky.skygod.skylibrary.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,10 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/api/v1/tokens")
 @RequiredArgsConstructor
+@Api(value = "Token")
 public class TokenController {
 
     private final SecurityProperties securityProperties;
 
+    @ApiOperation(value = "Logout token")
     @DeleteMapping("/revoke")
     public ResponseEntity<Void> revoke(HttpServletRequest req, HttpServletResponse res) {
         Cookie cookie = new Cookie("refreshToken", null);

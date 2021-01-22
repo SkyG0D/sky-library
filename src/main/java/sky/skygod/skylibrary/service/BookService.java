@@ -28,7 +28,7 @@ public class BookService {
     private final BookRepository bookRepository;
 
     public Page<BookGetResumedResponseBody> resumed(BookFilter bookFilter, Pageable pageable) {
-        return search(bookFilter, pageable).map(BookMapper.INSTANCE::toBookGetResumedResponseBody);
+            return search(bookFilter, pageable).map(BookMapper.INSTANCE::toBookGetResumedResponseBody);
     }
 
     public Page<Book> search(BookFilter bookFilter, Pageable pageable) {

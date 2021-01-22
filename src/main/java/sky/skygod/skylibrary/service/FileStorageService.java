@@ -39,7 +39,6 @@ public class FileStorageService {
     }
 
     public List<String> listFiles() {
-        System.out.println(this.fileStoragePath.normalize());
         try {
             return Files.walk(this.fileStoragePath)
                 .filter(Files::isRegularFile)

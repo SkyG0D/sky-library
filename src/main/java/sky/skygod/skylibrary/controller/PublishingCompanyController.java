@@ -1,5 +1,7 @@
 package sky.skygod.skylibrary.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -22,26 +24,31 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/publishers")
 @RequiredArgsConstructor
+@Api(value = "Publishing Company")
 public class PublishingCompanyController {
 
     private final PublishingCompanyService publishingCompanyService;
     private final ApplicationEventPublisher publisher;
 
+    @ApiOperation(value = "Returns page object of publishing company")
     @GetMapping
     public ResponseEntity<Page<PublishingCompany>> list(Pageable pageable) {
         return ResponseEntity.ok(publishingCompanyService.list(pageable));
     }
 
+    @ApiOperation(value = "Returns library user given uuid")
     @GetMapping("/{uuid}")
     public ResponseEntity<PublishingCompany> findById(@PathVariable UUID uuid) {
         return ResponseEntity.ok(publishingCompanyService.findByIdOrElseThrowNotFoundException(uuid));
     }
 
+    @ApiOperation(value = "Returns publishers list given parameter")
     @GetMapping("/find-by")
     public ResponseEntity<List<PublishingCompany>> findBy(@RequestParam String name) {
         return ResponseEntity.ok(publishingCompanyService.findBy(name));
     }
 
+    @ApiOperation(value = "Creates new publishing company")
     @PostMapping("/admin")
     public ResponseEntity<PublishingCompany> save(
             @RequestBody @Valid PublishingCompanyPostRequestBody publishingCompanyPostRequestBody,
@@ -52,12 +59,14 @@ public class PublishingCompanyController {
         return new ResponseEntity<>(savedPublishingCompany, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Removes library user given uuid")
     @DeleteMapping("/admin/{uuid}")
     public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
         publishingCompanyService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(value = "Removes library user")
     @PutMapping("/admin")
     public ResponseEntity<Void> replace(
             @RequestBody @Valid PublishingCompanyPutRequestBody publishingCompanyPutRequestBody) {

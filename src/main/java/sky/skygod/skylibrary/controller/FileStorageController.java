@@ -1,5 +1,6 @@
 package sky.skygod.skylibrary.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,13 @@ public class FileStorageController {
 
     private final FileStorageService fileStorageService;
 
+    @ApiOperation(value = "Returns list of files name")
     @GetMapping
     public ResponseEntity<List<String>> list() {
         return ResponseEntity.ok(fileStorageService.listFiles());
     }
 
+    @ApiOperation(value = "Returns image given file name")
     @GetMapping(value = "/images/{fileName:.+}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     public byte[] getImage(@PathVariable String fileName) throws IOException {
@@ -34,6 +37,7 @@ public class FileStorageController {
         return IOUtils.toByteArray(in);
     }
 
+    @ApiOperation(value = "Upload image")
     @PostMapping("/admin/images")
     public ResponseEntity<Response> uploadImage(@RequestParam MultipartFile file) {
         String fileName = fileStorageService.storageImage(file);
@@ -54,10 +58,11 @@ public class FileStorageController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Removes file given file name")
     @DeleteMapping("/admin/{fileName:.+}")
     public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {
         fileStorageService.deleteFile(fileName);
         return ResponseEntity.noContent().build();
     }
-    
+
 }

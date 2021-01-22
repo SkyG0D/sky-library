@@ -1,5 +1,7 @@
 package sky.skygod.skylibrary.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,18 +26,20 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-@Log4j2
+@Api(value = "Library User")
 public class LibraryUserController {
 
     private final LibraryUserDetailsService libraryUserDetailsService;
     private final ApplicationEventPublisher publisher;
 
+    @ApiOperation(value = "Returns page object of library user")
     @GetMapping
     public ResponseEntity<?> list(Pageable pageable) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(libraryUserDetailsService.list(pageable, authentication).get());
     }
 
+    @ApiOperation(value = "Returns library user given uuid")
     @GetMapping("/find-by")
     public ResponseEntity<?> findBy(@RequestParam String name, Pageable pageable) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -43,6 +47,7 @@ public class LibraryUserController {
             .ok(libraryUserDetailsService.findBy(name, pageable, authentication).get());
     }
 
+    @ApiOperation(value = "Returns library user given uuid")
     @GetMapping("/{uuid}")
     public ResponseEntity<?> findById(@PathVariable UUID uuid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,6 +55,7 @@ public class LibraryUserController {
             .findByIdOrElseThrowNotFoundException(uuid, authentication).get());
     }
 
+    @ApiOperation(value = "Creates new library user")
     @PostMapping("/admin")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<LibraryUserAdminGetResponseBody> save(
@@ -63,6 +69,7 @@ public class LibraryUserController {
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Removes library user given uuid")
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("/admin/{uuid}")
     public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
@@ -71,6 +78,7 @@ public class LibraryUserController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(value = "Updates library user")
     @PutMapping("/admin")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Void> replace(@RequestBody @Valid LibraryUserPutRequestBody libraryUserPutRequestBody) {
