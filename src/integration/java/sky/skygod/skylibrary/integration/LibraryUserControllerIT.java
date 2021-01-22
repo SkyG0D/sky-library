@@ -98,6 +98,7 @@ public class LibraryUserControllerIT {
     @Test
     @DisplayName("list returns list of library user inside page object for users when successful")
     void list_ReturnsListOfLibraryUserInsidePageObjectForUsers_WhenSuccessful() {
+
         LibraryUser savedLibraryUser = libraryUserRepository.save(USER);
 
         LibraryUserGetResponseBody libraryUserGetResponseBody = LibraryUserMapper.INSTANCE
@@ -118,6 +119,7 @@ public class LibraryUserControllerIT {
     @Test
     @DisplayName("list returns list of library user inside page object for admins when successful")
     void list_ReturnsListOfLibraryUserInsidePageObjectForAdmins_WhenSuccessful() {
+
         LibraryUser savedLibraryUser = libraryUserRepository.save(USER);
 
         LibraryUserAdminGetResponseBody libraryUserGetResponseBody = LibraryUserMapper.INSTANCE

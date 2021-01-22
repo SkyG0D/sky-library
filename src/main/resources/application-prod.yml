@@ -1,0 +1,15 @@
+spring:
+    datasource:
+        url: {JDBC_DATABASE_URL}
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 2MB
+            max-request-size: 5MB
+    profiles:
+        active: oauth-security
+
+my-security:
+    allowed-origin: *
+    enable-http: true
