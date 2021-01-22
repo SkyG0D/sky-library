@@ -5,8 +5,6 @@ plugins {
     id 'java'
 }
 
-apply plugin: 'net.ltgt.apt-idea'
-
 group = 'sky.skygod'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
