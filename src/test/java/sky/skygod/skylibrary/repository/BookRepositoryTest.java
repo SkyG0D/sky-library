@@ -5,11 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import sky.skygod.skylibrary.model.Book;
+import sky.skygod.skylibrary.repository.author.AuthorRepository;
 import sky.skygod.skylibrary.repository.book.BookRepository;
+import sky.skygod.skylibrary.repository.gender.GenderRepository;
+import sky.skygod.skylibrary.repository.publishingcompany.PublishingCompanyRepository;
+import sky.skygod.skylibrary.util.author.AuthorCreator;
 import sky.skygod.skylibrary.util.book.BookCreator;
+import sky.skygod.skylibrary.util.gender.GenderCreator;
+import sky.skygod.skylibrary.util.publishingcompany.PublishingCompanyCreator;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +28,14 @@ class BookRepositoryTest {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
+    private GenderRepository genderRepository;
+
+    private PublishingCompanyRepository publishingCompanyRepository;
 
     @Test
     @DisplayName("save persists book when successful")
@@ -81,8 +96,6 @@ class BookRepositoryTest {
 
         assertThat(optionalBook).isEmpty();
     }
-
-    // TODO: adicionar o findByIsbn
 
     @Test
     @DisplayName("findById returns book when successful")

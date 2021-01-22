@@ -19,6 +19,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class FileStorageService {
@@ -27,7 +28,7 @@ public class FileStorageService {
 
     public FileStorageService(FileStorageProperties fileStorageProperties) {
         this.fileStoragePath = Paths.get(fileStorageProperties.getUploadDir())
-                .toAbsolutePath().normalize();
+            .toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(this.fileStoragePath);
@@ -37,10 +38,22 @@ public class FileStorageService {
 
     }
 
+    public List<String> listFiles() {
+        System.out.println(this.fileStoragePath.normalize());
+        try {
+            return Files.walk(this.fileStoragePath)
+                .filter(Files::isRegularFile)
+                .map(path -> path.getFileName().toString())
+                .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new FileStorageException("Error to list files");
+        }
+    }
+
     public String storageImage(MultipartFile file) {
         List<String> contentTypes = Arrays.asList(
-                MediaType.IMAGE_JPEG_VALUE,
-                MediaType.IMAGE_PNG_VALUE
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.IMAGE_PNG_VALUE
         );
 
         if (!contentTypes.contains(file.getContentType())) {
@@ -83,6 +96,20 @@ public class FileStorageService {
             throw new MyFileNotFoundException("File not found: " + fileName, ex);
         }
 
+    }
+
+    public void deleteFile(String fileName) {
+        Path filePath = this.fileStoragePath.resolve(fileName).normalize();
+
+        try {
+            boolean deleted = Files.deleteIfExists(filePath);
+
+            if (!deleted) {
+                throw new MyFileNotFoundException("File not found: " + fileName);
+            }
+        } catch (IOException ex) {
+            throw new MyFileNotFoundException("File not found: " + fileName, ex);
+        }
     }
 
 }

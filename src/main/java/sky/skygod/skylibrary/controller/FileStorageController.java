@@ -13,6 +13,7 @@ import sky.skygod.skylibrary.service.FileStorageService;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/files")
@@ -20,6 +21,11 @@ import java.io.InputStream;
 public class FileStorageController {
 
     private final FileStorageService fileStorageService;
+
+    @GetMapping
+    public ResponseEntity<List<String>> list() {
+        return ResponseEntity.ok(fileStorageService.listFiles());
+    }
 
     @GetMapping(value = "/images/{fileName:.+}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
@@ -33,19 +39,25 @@ public class FileStorageController {
         String fileName = fileStorageService.storageImage(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/files/images/")
-                .path(fileName)
-                .toUriString();
+            .fromCurrentContextPath()
+            .path("/files/images/")
+            .path(fileName)
+            .toUriString();
 
         Response response = Response.builder()
-                .fileName(fileName)
-                .fileDownloadUri(fileDownloadUri)
-                .fileType(file.getContentType())
-                .size(file.getSize())
-                .build();
+            .fileName(fileName)
+            .fileDownloadUri(fileDownloadUri)
+            .fileType(file.getContentType())
+            .size(file.getSize())
+            .build();
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/admin/{fileName:.+}")
+    public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {
+        fileStorageService.deleteFile(fileName);
+        return ResponseEntity.noContent().build();
+    }
+    
 }

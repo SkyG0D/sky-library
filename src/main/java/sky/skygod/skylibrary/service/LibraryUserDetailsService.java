@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,8 +33,6 @@ import java.util.function.Function;
 @Log4j2
 public class LibraryUserDetailsService implements UserDetailsService {
 
-    // TODO: Refatorar para ter ROLE_USER como padrão.
-
     private final LibraryUserRepository libraryUserRepository;
     private static final LibraryUserMapper MAPPER = LibraryUserMapper.INSTANCE;
 
@@ -58,6 +57,7 @@ public class LibraryUserDetailsService implements UserDetailsService {
 
     public LibraryUserAdminGetResponseBody save(LibraryUserPostRequestBody libraryUserPostRequestBody,
                                                 Authentication authentication) {
+        libraryUserPostRequestBody.getAuthorities().add("ROLE_USER");
         LibraryUser user = MAPPER.toLibraryUser(libraryUserPostRequestBody);
 
         verifyIfRolesExistsOrElseThrowRoleNotExistsException(libraryUserPostRequestBody.getAuthorities());
@@ -82,6 +82,7 @@ public class LibraryUserDetailsService implements UserDetailsService {
 
     public void replace(LibraryUserPutRequestBody libraryUserPutRequestBody,
                         Authentication authentication) {
+        libraryUserPutRequestBody.getAuthorities().add("ROLE_USER");
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         LibraryUser user = MAPPER.toLibraryUser(libraryUserPutRequestBody);
 

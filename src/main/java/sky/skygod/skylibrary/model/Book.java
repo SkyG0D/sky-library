@@ -42,8 +42,6 @@ public class Book {
     private Integer pages;
 
     @NotNull(message = "Book status cannot be null")
-    @Enumerated(value = EnumType.STRING)
-    @JsonEnumDefaultValue
     private Status status;
 
     @NotNull(message = "Book authors cannot be null")
@@ -59,7 +57,7 @@ public class Book {
     private Set<Gender> genders;
 
     @NotNull(message = "Book publishing company cannot be null")
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "publishing_company_id")
     private PublishingCompany publishingCompany;
 
