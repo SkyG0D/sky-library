@@ -11,5 +11,5 @@ spring:
         active: oauth-security
 
 my-security:
-    allowed-origin: *
+    allowed-origin: "*"
     enable-http: true
