@@ -66,4 +66,5 @@ task integrationTest(type: Test) {
 
 check.dependsOn integrationTest
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ['clean', 'build'])
+stage.mustRunAfter(clean)
