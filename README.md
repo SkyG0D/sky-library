@@ -40,7 +40,7 @@ Antes de tudo, tenha certeza de ter instalado o Postgres em sua máquina.
 
 - Caso não queira utilizar outro login no postges execute o comando: 
 
-`./gradlew bootRun --args="--spring.datasource.username=${SEU_USUARIO},--spring.datasource.password=${SUA_SENHA}"`
+`./gradlew bootRun --args="--spring.datasource.username=${SEU_USUARIO}, --spring.datasource.password=${SUA_SENHA}"`
 
 ## :heart: Contribuições
 
